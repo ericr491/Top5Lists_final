@@ -11,6 +11,8 @@ import WorkspaceScreen from './WorkspaceScreen'
 import LoginScreen from './LoginScreen'
 import ErrorModal from './ErrorModal'
 import DeleteModal from './DeleteModal'
+import SortIcon from './SortIcon'
+import StaticTop5Item from './StaticTop5Item'
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -29,6 +31,8 @@ export {
     Top5Item,
     WorkspaceScreen,
     LoginScreen,
+    SortIcon,
     ErrorModal,
     DeleteModal,
+    StaticTop5Item,
 }

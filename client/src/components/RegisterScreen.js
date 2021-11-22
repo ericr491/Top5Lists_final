@@ -26,7 +26,8 @@ export default function RegisterScreen(props) {
             lastName: formData.get('lastName'),
             email: formData.get('email'),
             password: formData.get('password'),
-            passwordVerify: formData.get('passwordVerify')
+            passwordVerify: formData.get('passwordVerify'),
+            username: formData.get('username'),
         }, store).catch(data => {
             toggleVisibility()
             displayMessage(data.errorMessage)
@@ -52,6 +53,16 @@ export default function RegisterScreen(props) {
                 </Typography>
                 <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id="username"
+                                label="Username"
+                                name="username"
+                                autoComplete="username"
+                            />
+                        </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 autoComplete="fname"

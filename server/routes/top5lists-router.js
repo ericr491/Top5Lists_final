@@ -7,6 +7,7 @@ const router = express.Router()
 
 router.post('/top5list', auth.verify, Top5ListController.createTop5List)
 router.put('/top5list/:id', auth.verify, Top5ListController.updateTop5List)
+router.put('/top5listunimportant/:id', Top5ListController.updateUnimportantTop5List)
 router.delete('/top5list/:id', auth.verify, Top5ListController.deleteTop5List)
 router.get('/top5list/:id', Top5ListController.getTop5ListById)
 router.get('/top5lists', Top5ListController.getTop5Lists)

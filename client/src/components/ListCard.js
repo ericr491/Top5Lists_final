@@ -1,11 +1,23 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
 import ListItem from '@mui/material/ListItem'
+import Grid from '@mui/material/Grid'
+import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
-import EditIcon from '@mui/icons-material/Edit'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import DeleteIcon from '@mui/icons-material/Delete'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import ThumbDownIcon from '@mui/icons-material/ThumbDown'
+import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined'
+import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined'
+import List from '@mui/material/List'
+import StaticTop5Item from './StaticTop5Item'
+import Comment from './Comment'
+import Typography from '@mui/material/Typography'
+import AuthContext from '../auth'
+import api from '../api'
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -17,28 +29,33 @@ import DeleteIcon from '@mui/icons-material/Delete'
 function ListCard(props) {
     const { idNamePair, delModalToggleVisibility } = props
     const { store } = useContext(GlobalStoreContext)
+    const { auth } = useContext(AuthContext)
     const [editActive, setEditActive] = useState(false)
-    const [text, setText] = useState(idNamePair.name)
+    const [text, setText] = useState("")
+    const [liked, setLiked] = useState(false)
+    const [disliked, setDisliked] = useState(false)
 
-    function handleLoadList(event, id) {
-        if (!event.target.disabled) {
-            // CHANGE THE CURRENT LIST
-            store.setCurrentList(id)
+    useEffect(() => {
+        if (idNamePair?.likes.find(username => username === auth.user.username)) {
+            setLiked(true) // Means the user has liked this list
+        } else {
+            setLiked(false)
         }
-    }
+        if (idNamePair?.dislikes.find(username => username === auth.user.username)) {
+            setDisliked(true)
+        } else {
+            setDisliked(false)
+        }
+    }, [idNamePair])
 
-    function handleToggleEdit(event) {
+    async function handleToggleEdit(event) {
         event.stopPropagation()
+        await store.updateItemsAndComments(idNamePair._id)
         toggleEdit()
     }
 
     function toggleEdit() {
         let newActive = !editActive
-        if (newActive) {
-            store.setIsListNameEditActive()
-        } else {
-            store.unsetIsListNameEditActive()
-        }
         setEditActive(newActive)
     }
 
@@ -48,71 +65,271 @@ function ListCard(props) {
         delModalToggleVisibility()
     }
 
-    function handleKeyPress(event) {
+    async function handleKeyPress(event) {
         if (event.code === "Enter") {
-            let id = event.target.id.substring("list-".length)
-            store.changeListName(id, text)
-            toggleEdit()
+            await store.postAComment(idNamePair._id, text)
+            console.log('testing')
+            setText("")
         }
     }
+
     function handleUpdateText(event) {
         setText(event.target.value)
     }
 
-    let listNameActive = false
-    if (store.isListNameEditActive) {
-        listNameActive = true
+    async function handleLike(event, id) {
+        if (liked) { // Remove the user from the like list
+            const fullList = await api.getTop5ListById(id)
+            const newList = {
+                ...fullList.data.top5List,
+                likes: fullList.data.top5List.likes.filter(username => username !== auth.user.username)
+            }
+            await store.updateTop5List(id, newList)
+        } else {
+            const fullList = await api.getTop5ListById(id)
+            const newList = {
+                ...fullList.data.top5List,
+                likes: fullList.data.top5List.likes.concat(auth.user.username),
+                dislikes: fullList.data.top5List.dislikes.filter(username => username !== auth.user.username),
+            }
+            await store.updateTop5List(id, newList)
+        }
     }
+
+    async function handleDislike(event, id) {
+        if (disliked) {
+            const fullList = await api.getTop5ListById(id)
+            const newList = {
+                ...fullList.data.top5List,
+                dislikes: fullList.data.top5List.dislikes.filter(username => username !== auth.user.username)
+            }
+            await store.updateTop5List(id, newList)
+        } else {
+            const fullList = await api.getTop5ListById(id)
+            const newList = {
+                ...fullList.data.top5List,
+                dislikes: fullList.data.top5List.dislikes.concat(auth.user.username),
+                likes: fullList.data.top5List.likes.filter(username => username !== auth.user.username),
+            }
+            await store.updateTop5List(id, newList)
+        }
+    }
+
+    let publishedDate = (function () {
+        let date = new Date(idNamePair.publishedDate).toDateString()
+            .split(' ')
+            .splice(1, 3)
+            .join(' ')
+        return (
+            <Box
+                style={{ color: "green" }}
+            >
+                Published: {date}
+            </Box>
+        )
+    })()
+    if (!idNamePair.published) {
+        publishedDate = <Box style={{ color: "red" }}>Edit</Box>
+    }
+
+    let items = undefined
+    let comments = undefined
+    let textField = undefined
+    if (editActive) {
+        const matchingList = store.idItemsComments
+            .find(doc => doc._id === idNamePair._id)
+        items = matchingList?.items.map((item, index) =>
+            <StaticTop5Item
+                key={`statictop5item${index + 1}`}
+                index={index + 1}
+                content={item} />
+        )
+        comments = matchingList?.comments.slice(0).reverse().map((comment, index) =>
+            <Comment
+                key={`top5comment${index + 1}`}
+                author={comment.ownerName}
+                comment={comment.comment}
+            />
+        )
+        textField = <TextField
+            margin="normal"
+            fullWidth
+            id={"comment-" + idNamePair._id}
+            name="name"
+            autoComplete="Comment"
+            placeholder="Add comment"
+            onKeyPress={handleKeyPress}
+            onChange={handleUpdateText}
+            inputProps={{ style: { fontSize: 16 } }}
+            InputLabelProps={{ style: { fontSize: 12 } }}
+            sx={{ backgroundColor: "white" }}
+            value={text}
+        />
+    }
+
+    let likeButton = undefined
+    let dislikeButton = undefined
+    if (liked) {
+        likeButton = <Typography component={'span'}>
+            <ThumbUpIcon onClick={(event) => handleLike(event, idNamePair._id)} />
+            {idNamePair.likes.length}</Typography>
+    } else {
+        likeButton = <Typography component={'span'}>
+            <ThumbUpOutlinedIcon onClick={(event) => handleLike(event, idNamePair._id)} />
+            {idNamePair.likes.length}</Typography>
+    }
+    if (disliked) {
+        dislikeButton = <Typography component={'span'}>
+            <ThumbDownIcon onClick={(event) => handleDislike(event, idNamePair._id)} />
+            {idNamePair.dislikes.length}</Typography>
+    } else {
+        dislikeButton = <Typography component={'span'}>
+            <ThumbDownOutlinedIcon onClick={(event) => handleDislike(event, idNamePair._id)} />
+            {idNamePair.dislikes.length}</Typography>
+    }
+
+    let expandedViewElements = <Grid
+        container
+        item
+        direction="row"
+        md={12}
+        columns={12}
+        columnSpacing={2}
+    >
+        <Grid
+            item
+            md={6}
+        >
+            <Paper
+                sx={{
+                    backgroundColor: "#2C2F70",
+                    width: "100%",
+                    border: "2px solid black",
+                    borderRadius: "10px",
+                }}>
+                {items && items.length > 0 ? <List>{items}</List> : <></>}
+            </Paper>
+        </Grid>
+
+        <Grid
+            item
+            md={6}
+        >
+            <Paper
+                sx={{ backgroundColor: "inherit", width: "100%" }}
+                style={{ maxHeight: 200, overflow: 'auto' }}
+                variant="none"
+            >
+                {comments && comments.length > 0
+                    ? <List >{comments}</List> : <></>}
+            </Paper>
+            {textField ? textField : <></>}
+        </Grid>
+    </Grid>
 
     let cardElement =
         <ListItem
             id={idNamePair._id}
-            key={idNamePair._id}
-            sx={{ marginTop: '15px', display: 'flex', p: 1 }}
-            button
-            onClick={(event) => {
-                handleLoadList(event, idNamePair._id)
-            }
-            }
+            key={'listItem' + idNamePair._id}
+            sx={{ marginTop: '15px', display: 'flex', p: 1, paddingLeft: '15px', paddingRight: '0px' }}
             style={{
-                fontSize: '48pt',
-                width: '100%'
+                fontSize: '18pt',
+                width: '100%',
+                border: '1px solid black',
+                borderRadius: '10px',
+                backgroundColor: idNamePair.published ? '#D4D4F5' : '#FFFFF1'
             }}
         >
-            <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={handleToggleEdit} aria-label='edit' disabled={listNameActive}>
-                    <EditIcon style={{ fontSize: '48pt' }} />
-                </IconButton>
-            </Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={(event) => {
-                    handleDeleteList(event, idNamePair._id)
-                }} aria-label='delete' disabled={listNameActive}>
-                    <DeleteIcon style={{ fontSize: '48pt' }} />
-                </IconButton>
-            </Box>
-        </ListItem>
+            <Grid
+                container
+                spacing={0}
+                columns={12}
+                direction={"row"}
+            >
+                <Grid
+                    item
+                    container
+                    md={5}
+                    direction="column"
+                >
+                    <Grid
+                        item
+                        md={3}
+                        sx={{ p: 1, flexGrow: 1 }}
+                    >
+                        <Typography component={'span'} variant="h4" style={{
+                            fontWeight: "bold"
+                        }}>{idNamePair.name}</Typography>
+                    </Grid>
+                    <Grid
+                        item
+                        md={3}
+                        sx={{ p: 1, flexGrow: 1 }}
+                        style={{
+                        }}
+                    >
+                        <Typography component={'span'} style={{ color: "blue" }}>By: {idNamePair.ownerName}</Typography>
+                    </Grid>
+                    <Grid
+                        item
+                        md={3}
+                        sx={{ p: 1, flexGrow: 1 }}
+                        style={{
+                        }}
+                    >
+                        <Typography component={'span'}>{publishedDate}</Typography>
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    item
+                    direction="column"
+                    md={3}
+                >
+                    <Grid
+                        item
+                    >
+                        {likeButton}
+                    </Grid>
+                    <Grid
+                        item
+                        md={3}
+                        sx={{ p: 1, flexGrow: 1 }}
+                        style={{
+                        }}
+                    >
+                        <Typography component={'span'}>Views: {idNamePair.views}</Typography>
+                    </Grid>
+                </Grid>
+                <Grid
+                    item
+                    md={2}
+                >
+                    {dislikeButton}
+                </Grid>
 
-    if (editActive) {
-        cardElement =
-            <TextField
-                margin="normal"
-                required
-                fullWidth
-                id={"list-" + idNamePair._id}
-                label="Top 5 List Name"
-                name="name"
-                autoComplete="Top 5 List Name"
-                className='list-card'
-                onKeyPress={handleKeyPress}
-                onChange={handleUpdateText}
-                defaultValue={idNamePair.name}
-                inputProps={{ style: { fontSize: 48 } }}
-                InputLabelProps={{ style: { fontSize: 24 } }}
-                autoFocus
-            />
-    }
+                <Grid
+                    item
+                    container
+                    direction="column"
+                    md={2}
+                >
+                    <Grid item sx={{ p: 1 }}>
+                        <IconButton onClick={(event) => {
+                            handleDeleteList(event, idNamePair._id)
+                        }} aria-label='delete'>
+                            <DeleteIcon style={{ fontSize: '48pt' }} />
+                        </IconButton>
+                    </Grid>
+                    <Grid item sx={{ p: 1 }}>
+                        <IconButton onClick={handleToggleEdit} aria-label='edit'>
+                            <ExpandMoreIcon style={{ fontSize: '48pt' }} />
+                        </IconButton>
+                    </Grid>
+                </Grid>
+                {editActive && expandedViewElements}
+            </Grid>
+        </ListItem>
     return (
         cardElement
     )

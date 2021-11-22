@@ -1,4 +1,5 @@
 const Top5List = require('../models/top5list-model')
+const User = require('../models/user-model')
 
 createTop5List = (req, res) => {
     const body = req.body
@@ -22,21 +23,38 @@ createTop5List = (req, res) => {
         return res.status(400).json({ success: false, error: err })
     }
 
-    top5List
-        .save()
-        .then(() => {
-            return res.status(201).json({
-                success: true,
-                top5List: top5List,
-                message: 'Top 5 List Created!'
+    User.findOne({ _id: req.userId }, (err, user) => {
+        if (err) {
+            return res
+                .status(404)
+                .json({
+                    err,
+                    message: 'User not found',
+                })
+        }
+
+        console.log("user found: " + JSON.stringify(user))
+        user.top5Lists.push(top5List._id)
+        user
+            .save()
+            .then(() => {
+                top5List
+                    .save()
+                    .then(() => {
+                        return res.status(201).json({
+                            success: true,
+                            top5List: top5List,
+                            message: 'Top 5 List Created!'
+                        })
+                    })
+                    .catch(error => {
+                        return res.status(400).json({
+                            error: error,
+                            message: 'Top 5 List Not Created!'
+                        })
+                    })
             })
-        })
-        .catch(error => {
-            return res.status(400).json({
-                error,
-                message: 'Top 5 List Not Created!'
-            })
-        })
+    })
 }
 
 updateTop5List = async (req, res) => {
@@ -110,21 +128,32 @@ deleteTop5List = async (req, res) => {
 }
 
 getTop5ListById = async (req, res) => {
-    await Top5List.findById({ _id: req.params.id }, (err, list) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
+    // await Top5List.findById({ _id: req.params.id }, (err, list) => {
+    //     if (err) {
+    //         return res.status(400).json({ success: false, error: err })
+    //     }
 
-        if (!req.userId || (req.userId !== list.userId.toString())) {
-            return res.status(401).json({
-                success: false,
-                message: 'User is not authorize to view this list.',
-            })
-        }
+    //     if (!req.userId || (req.userId !== list.userId.toString())) {
+    //         return res.status(401).json({
+    //             success: false,
+    //             message: 'User is not authorize to view this list.',
+    //         })
+    //     }
 
-        return res.status(200).json({ success: true, top5List: list })
-    }).catch(err => console.log(err))
+    //     return res.status(200).json({ success: true, top5List: list })
+    // }).catch(err => console.log(err))
+
+    await Top5List
+        .findById({ _id: req.params.id })
+        .populate('comments')
+        .exec((err, list) => {
+            if (err) {
+                return res.status(400).json({ success: false, error: err })
+            }
+            return res.status(200).json({ success: true, top5List: list })
+        })
 }
+
 getTop5Lists = async (req, res) => {
     await Top5List.find({}, (err, top5Lists) => {
         if (err) {
@@ -139,13 +168,11 @@ getTop5Lists = async (req, res) => {
     }).catch(err => console.log(err))
 }
 getTop5ListPairs = async (req, res) => {
-    if (!req.userId) {
-        return res.status(401).json({
-            success: false,
-            message: 'User is not authorize to view this list.',
-        })
+    let queries = [{ published: true }]
+    if (req.userId) {
+        queries.push({ userId: req.userId })
     }
-    await Top5List.find({ userId: req.userId }, (err, top5Lists) => {
+    await Top5List.find({ $or: queries }, (err, top5Lists) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
@@ -162,7 +189,13 @@ getTop5ListPairs = async (req, res) => {
                 let list = top5Lists[key]
                 let pair = {
                     _id: list._id,
-                    name: list.name
+                    name: list.name,
+                    likes: list.likes,
+                    dislikes: list.dislikes,
+                    views: list.views,
+                    published: list.published,
+                    ownerName: list.ownerName,
+                    publishedDate: list.updatedAt,
                 }
                 pairs.push(pair)
             }

@@ -1,38 +1,18 @@
 import React, { useContext, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
+import { Typography } from '@mui/material'
 import List from '@mui/material/List'
 import AuthContext from '../auth'
-import WorkspaceScreen from './WorkspaceScreen'
-
 /*
     This React component lists all the top5 lists in the UI.
     
     @author McKilla Gorilla
 */
-const HomeScreen = (props) => {
+const AllScreen = (props) => {
     const { auth } = useContext(AuthContext)
     const { store } = useContext(GlobalStoreContext)
-    const { delModalToggleVisibility, idNamePairs } = props
-
-    // function handleCreateNewList() {
-    //     store.createNewList()
-    // }
-    // let listNameActive = false
-    // if (store && store.isListNameEditActive) {
-    //     listNameActive = true
-    // }
-
-    // Redirects them to the ALL View if they are not logged in.
-    useEffect(() => {
-        if (!auth.loggedIn) {
-            store.setActiveView("ALL")
-        }
-    }, [])
-
-    if (!auth.loggedIn) {
-        return <></>
-    }
+    const { idNamePairs } = props
 
     let listCard = ""
     if (idNamePairs) {
@@ -44,7 +24,6 @@ const HomeScreen = (props) => {
                             <ListCard
                                 key={pair._id}
                                 idNamePair={pair}
-                                delModalToggleVisibility={delModalToggleVisibility}
                             />
                         ))
                 }
@@ -57,8 +36,7 @@ const HomeScreen = (props) => {
                     listCard
                 }
             </div>
-            <WorkspaceScreen />
         </div>)
 }
 
-export default HomeScreen
+export default AllScreen

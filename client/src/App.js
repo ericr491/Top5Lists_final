@@ -12,6 +12,8 @@ import {
     LoginScreen,
     ErrorModal,
     DeleteModal,
+    ScreenWrapper,
+    SplashScreen
 } from './components'
 /*
     This is our application's top-level component.
@@ -52,7 +54,13 @@ const App = () => {
                             path="/"
                             exact
                             component={() => (
-                                <HomeWrapper delModalToggleVisibility={delModalToggleVisibility} />)}
+                                <SplashScreen />)}
+                        />
+                        <Route
+                            path="/home/"
+                            exact
+                            component={() => (
+                                <ScreenWrapper delModalToggleVisibility={delModalToggleVisibility} />)}
                         />
                         <Route
                             path="/register/"
@@ -72,7 +80,6 @@ const App = () => {
                         />
                         <Route path="/top5list/:id" exact component={WorkspaceScreen} />
                     </Switch>
-                    <Statusbar />
                 </GlobalStoreContextProvider>
             </AuthContextProvider>
         </BrowserRouter>

@@ -36,12 +36,12 @@ function ListCard(props) {
     const [disliked, setDisliked] = useState(false)
 
     useEffect(() => {
-        if (idNamePair?.likes.find(username => username === auth.user.username)) {
+        if (idNamePair?.likes.find(username => username === auth.user?.username)) {
             setLiked(true) // Means the user has liked this list
         } else {
             setLiked(false)
         }
-        if (idNamePair?.dislikes.find(username => username === auth.user.username)) {
+        if (idNamePair?.dislikes.find(username => username === auth.user?.username)) {
             setDisliked(true)
         } else {
             setDisliked(false)
@@ -68,7 +68,6 @@ function ListCard(props) {
     async function handleKeyPress(event) {
         if (event.code === "Enter") {
             await store.postAComment(idNamePair._id, text)
-            console.log('testing')
             setText("")
         }
     }
@@ -77,7 +76,17 @@ function ListCard(props) {
         setText(event.target.value)
     }
 
+    // When a user clicks the Edit Button it will open the Workplace
+    function handleEditOnClick(event) {
+        store.setCurrentList(idNamePair._id)
+    }
+
     async function handleLike(event, id) {
+        if (!auth.loggedIn) {
+            alert('You must be logged in to like/dislike')
+            return
+        }
+
         if (liked) { // Remove the user from the like list
             const fullList = await api.getTop5ListById(id)
             const newList = {
@@ -97,6 +106,11 @@ function ListCard(props) {
     }
 
     async function handleDislike(event, id) {
+        if (!auth.loggedIn) {
+            alert('You must be logged in to like/dislike')
+            return
+        }
+
         if (disliked) {
             const fullList = await api.getTop5ListById(id)
             const newList = {
@@ -129,7 +143,7 @@ function ListCard(props) {
         )
     })()
     if (!idNamePair.published) {
-        publishedDate = <Box style={{ color: "red" }}>Edit</Box>
+        publishedDate = <Box style={{ color: "red" }} onClick={() => store.setCurrentList(idNamePair._id)}>Edit</Box>
     }
 
     let items = undefined
@@ -164,6 +178,7 @@ function ListCard(props) {
             InputLabelProps={{ style: { fontSize: 12 } }}
             sx={{ backgroundColor: "white" }}
             value={text}
+            disabled={!auth.loggedIn}
         />
     }
 
@@ -315,11 +330,13 @@ function ListCard(props) {
                     md={2}
                 >
                     <Grid item sx={{ p: 1 }}>
-                        <IconButton onClick={(event) => {
-                            handleDeleteList(event, idNamePair._id)
-                        }} aria-label='delete'>
-                            <DeleteIcon style={{ fontSize: '48pt' }} />
-                        </IconButton>
+                        {store.activeView === 'HOME' && (
+                            <IconButton onClick={(event) => {
+                                handleDeleteList(event, idNamePair._id)
+                            }} aria-label='delete'>
+                                <DeleteIcon style={{ fontSize: '48pt' }} />
+                            </IconButton>
+                        )}
                     </Grid>
                     <Grid item sx={{ p: 1 }}>
                         <IconButton onClick={handleToggleEdit} aria-label='edit'>

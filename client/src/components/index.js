@@ -13,6 +13,9 @@ import ErrorModal from './ErrorModal'
 import DeleteModal from './DeleteModal'
 import SortIcon from './SortIcon'
 import StaticTop5Item from './StaticTop5Item'
+import Comment from './Comment'
+import Copyright from './Copyright'
+import ScreenWrapper from './ScreenWrapper'
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -35,4 +38,7 @@ export {
     ErrorModal,
     DeleteModal,
     StaticTop5Item,
+    ScreenWrapper,
+    Copyright,
+    Comment
 }

@@ -1,9 +1,17 @@
-import { useContext } from 'react'
-import { GlobalStoreContext } from '../store'
+import { useContext, useState } from 'react'
+import { GlobalStoreContext, ActiveViewType } from '../store'
+import AuthContext from '../auth'
 import Button from '@mui/material/Button'
-import UndoIcon from '@mui/icons-material/Undo'
-import RedoIcon from '@mui/icons-material/Redo'
-import CloseIcon from '@mui/icons-material/HighlightOff'
+import Box from '@mui/material/Box'
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
+import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined'
+import SearchBar from './SearchBar'
+import SortIcon from './SortIcon'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+
 
 /*
     This toolbar is a functional React component that
@@ -12,51 +20,80 @@ import CloseIcon from '@mui/icons-material/HighlightOff'
     @author McKilla Gorilla
 */
 function EditToolbar() {
+    const { auth } = useContext(AuthContext)
     const { store } = useContext(GlobalStoreContext)
 
-    function handleUndo() {
-        store.undo()
+    const [textField, setTextField] = useState("")
+
+    let activeView = store.activeView
+    let isEditMode = activeView === "EDIT"
+
+    function handleUpdateText(event) {
+        setTextField(event.target.value)
     }
-    function handleRedo() {
-        store.redo()
+
+    function handleKeyPress(event) {
+        if (event.code === "Enter") {
+            store.setSearchBarContents(textField)
+            setTextField("")
+        }
     }
-    function handleClose() {
-        store.closeCurrentList()
+
+    function handleClick(view) {
+        if (store.activeView !== view) {
+            store.setActiveView(view)
+        }
     }
-    let editStatus = false
-    if (store.isListNameEditActive) {
-        editStatus = true
-    }
-    let itemEditStatus = false
-    if (store.isItemEditActive) {
-        itemEditStatus = true
-    }
+
     return (
-        <div id="edit-toolbar">
-            <Button
-                id='undo-button'
-                onClick={handleUndo}
-                variant="contained"
-                disabled={!store.canUndo()}
-            >
-                <UndoIcon />
-            </Button>
-            <Button
-                id='redo-button'
-                onClick={handleRedo}
-                variant="contained"
-                disabled={!store.canRedo()}
-            >
-                <RedoIcon />
-            </Button>
-            <Button
-                disabled={editStatus || itemEditStatus}
-                id='close-button'
-                onClick={handleClose}
-                variant="contained">
-                <CloseIcon />
-            </Button>
-        </div>
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static" style={{ backgroundColor: "#E0E0E0" }}>
+                <Toolbar>
+                    <Button
+                        id='home-button'
+                        onClick={() => handleClick(ActiveViewType.HOME)}
+                        disabled={!auth.loggedIn || isEditMode}
+                        variant={activeView === ActiveViewType.HOME ? "outlined" : "text"}
+                    >
+                        <HomeOutlinedIcon style={{ fill: 'black' }} />
+                    </Button>
+                    <Button
+                        id='all-button'
+                        onClick={() => handleClick(ActiveViewType.ALL)}
+                        disabled={isEditMode}
+                        variant={activeView === ActiveViewType.ALL ? "outlined" : "text"}
+                    >
+                        <GroupOutlinedIcon style={{ fill: 'black' }} />
+                    </Button>
+                    <Button
+                        id='user-button'
+                        onClick={() => handleClick(ActiveViewType.USER)}
+                        disabled={isEditMode}
+                        variant={activeView === ActiveViewType.USER ? "outlined" : "text"}
+
+                    >
+                        <PersonOutlinedIcon style={{ fill: 'black' }} />
+                    </Button>
+                    <Button
+                        id='community-button'
+                        onClick={() => handleClick(ActiveViewType.COMMUNITY)}
+                        disabled={isEditMode}
+                        variant={activeView === ActiveViewType.COMMUNITY ? "outlined" : "text"}
+                    >
+                        <SummarizeOutlinedIcon style={{ fill: 'black' }} />
+                    </Button>
+                    <SearchBar
+                        textField={textField}
+                        handleKeyPress={handleKeyPress}
+                        handleUpdateText={handleUpdateText}
+                        disabled={isEditMode}
+                    />
+                    <SortIcon disabled={isEditMode} />
+
+                </Toolbar>
+
+            </AppBar>
+        </Box>
     )
 }
 

@@ -117,12 +117,31 @@ function GlobalStoreContextProvider(props) {
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
             case GlobalStoreActionType.LOAD_ID_NAME_PAIRS: {
+                let pairsArray = payload
+                switch (store.sortBy) {
+                    case SortByType.OLD:
+                        pairsArray = pairsArray.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
+                        break
+                    case SortByType.MOST_VIEWS:
+                        pairsArray = pairsArray.sort((a, b) => b.views - a.views)
+                        break
+                    case SortByType.MOST_LIKES:
+                        pairsArray = pairsArray.sort((a, b) => b.likes.length - a.likes.length)
+                        break
+                    case SortByType.MOST_DISLIKES:
+                        pairsArray = pairsArray.sort((a, b) => b.dislikes.length - a.dislikes.length)
+                        break
+                    case SortByType.NEW: // Newest is first
+                    default:
+                        pairsArray = pairsArray.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate))
+                        break
+                }
                 return setStore({
-                    idNamePairs: payload,
+                    idNamePairs: pairsArray,
                     idItemsComments: store.idItemsComments,
                     currentList: null,
                     listMarkedForDeletion: null,
-                    activeView: ActiveViewType.HOME,
+                    activeView: store.activeView,
                     sortBy: store.sortBy,
                     searchBarContents: store.searchBarContents
                 })
@@ -153,12 +172,12 @@ function GlobalStoreContextProvider(props) {
             }
             case GlobalStoreActionType.SET_SORT_BY: {
                 return setStore({
-                    idNamePairs: store.idNamePairs,
+                    idNamePairs: payload.pairsArray,
                     idItemsComments: store.idItemsComments,
                     currentList: null,
                     listMarkedForDeletion: null,
                     activeView: store.activeView,
-                    sortBy: store.sortBy,
+                    sortBy: payload.sortType,
                     searchBarContents: store.searchBarContents
                 })
             }
@@ -181,7 +200,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     activeView: payload,
                     sortBy: store.sortBy,
-                    searchBarContents: payload
+                    searchBarContents: "",
+                    // searchBarContents: store.searchBarContents
                 })
             }
             default:
@@ -229,7 +249,7 @@ function GlobalStoreContextProvider(props) {
             payload: {}
         })
 
-        history.push("/")
+        history.push("/home/")
     }
 
     // THIS FUNCTION CREATES A NEW LIST
@@ -255,7 +275,7 @@ function GlobalStoreContextProvider(props) {
             )
 
             // IF IT'S A VALID LIST THEN LET'S START EDITING IT
-            history.push("/top5list/" + newList._id)
+            // history.push("/top5list/" + newList._id)
         }
         else {
             console.log("API FAILED TO CREATE A NEW LIST")
@@ -267,6 +287,7 @@ function GlobalStoreContextProvider(props) {
         const response = await api.getTop5ListPairs()
         if (response.data.success) {
             let pairsArray = response.data.idNamePairs
+
             storeReducer({
                 type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                 payload: pairsArray
@@ -327,7 +348,6 @@ function GlobalStoreContextProvider(props) {
                     type: GlobalStoreActionType.SET_CURRENT_EDITING_LIST,
                     payload: top5List
                 })
-                history.push("/top5list/" + top5List._id)
             }
         }
     }
@@ -378,6 +398,45 @@ function GlobalStoreContextProvider(props) {
             await store.loadIdNamePairs()
         }
     }
+
+    store.setSearchBarContents = function (newContents) {
+        storeReducer({
+            type: GlobalStoreActionType.SET_SEARCH_BAR_CONTENTS,
+            payload: newContents
+        })
+    }
+
+    store.setSortType = function (sortType) {
+        let pairsArray = store.idNamePairs
+        switch (sortType) {
+            case SortByType.OLD:
+                pairsArray = pairsArray.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
+                break
+            case SortByType.MOST_VIEWS:
+                pairsArray = pairsArray.sort((a, b) => b.views - a.views)
+                break
+            case SortByType.MOST_LIKES:
+                pairsArray = pairsArray.sort((a, b) => b.likes.length - a.likes.length)
+                break
+            case SortByType.MOST_DISLIKES:
+                pairsArray = pairsArray.sort((a, b) => b.dislikes.length - a.dislikes.length)
+                break
+            case SortByType.NEW: // Newest is first
+            default:
+                pairsArray = pairsArray.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate))
+                break
+        }
+        storeReducer({
+            type: GlobalStoreActionType.SET_SORT_BY,
+            payload: { sortType, pairsArray }
+        })
+    }
+
+    // store.logout = function () {
+    //     storeReducer({
+
+    //     })
+    // }
 
     return (
         <GlobalStoreContext.Provider value={{

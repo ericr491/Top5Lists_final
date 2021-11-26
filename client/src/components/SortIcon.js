@@ -1,28 +1,32 @@
 import { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
 import AuthContext from '../auth'
-import { GlobalStoreContext } from '../store'
-import EditToolbar from './EditToolbar'
-import AppBar from '@mui/material/AppBar'
+import { GlobalStoreContext, SortByType } from '../store'
 import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
 import SortSVGIcon from '@mui/icons-material/Sort'
 
-export default function SortIcon() {
+export default function SortIcon(props) {
     const { store } = useContext(GlobalStoreContext)
     const [anchorEl, setAnchorEl] = useState(null)
     const isMenuOpen = Boolean(anchorEl)
+    const { disabled } = props
 
     const handleProfileMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget)
+        if (!disabled)
+            setAnchorEl(event.currentTarget)
     }
 
     const handleMenuClose = () => {
         setAnchorEl(null)
+    }
+
+    const handleMenuItemClick = (type) => {
+        if (store.sortBy !== type) {
+            store.setSortType(type)
+        }
+        handleMenuClose()
     }
 
     const menuId = 'primary-search-account-menu'
@@ -42,11 +46,11 @@ export default function SortIcon() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Publish Date (Newest)</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Publish Date (Oldest)</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Views</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Likes</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Dislikes</MenuItem>
+            <MenuItem onClick={() => { handleMenuItemClick(SortByType.NEW) }}>Publish Date (Newest)</MenuItem>
+            <MenuItem onClick={() => { handleMenuItemClick(SortByType.OLD) }}>Publish Date (Oldest)</MenuItem>
+            <MenuItem onClick={() => { handleMenuItemClick(SortByType.MOST_VIEWS) }}>Views</MenuItem>
+            <MenuItem onClick={() => { handleMenuItemClick(SortByType.MOST_LIKES) }}>Likes</MenuItem>
+            <MenuItem onClick={() => { handleMenuItemClick(SortByType.MOST_DISLIKES) }}>Dislikes</MenuItem>
         </Menu>
     )
 
@@ -54,7 +58,7 @@ export default function SortIcon() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <Typography>
+            <Typography sx={{ color: "black" }}>
                 SORT BY
             </Typography>
             <SortSVGIcon
@@ -64,7 +68,7 @@ export default function SortIcon() {
                 aria-controls={menuId}
                 aria-haspopup="true"
                 onClick={handleProfileMenuOpen}
-                color="inherit"
+                style={{ fill: 'black' }}
             >
             </SortSVGIcon>
             {

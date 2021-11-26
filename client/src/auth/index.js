@@ -62,7 +62,7 @@ function AuthContextProvider(props) {
                         user: response.data.user
                     }
                 })
-                history.push("/")
+                history.push("/home/")
             }
         } catch (exception) {
             // IF RESPONSE FAILS WITH A 4XX, ALERT THE METHOD THAT CALL THIS ONE
@@ -81,8 +81,8 @@ function AuthContextProvider(props) {
                         user: response.data.user
                     }
                 })
-                history.push("/")
-                store.loadIdNamePairs()
+                history.push("/login/")
+                // store.loadIdNamePairs()
             }
             return response.data
         } catch (exception) {
@@ -119,8 +119,8 @@ function AuthContextProvider(props) {
                     }
                 })
             }
-            history.push("/")
-            store.loadIdNamePairs()
+            history.push("/home/")
+            // store.loadIdNamePairs()
         } catch (exception) {
             console.log(exception)
             return Promise.reject(exception.response.data)

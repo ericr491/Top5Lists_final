@@ -256,7 +256,10 @@ function ListCard(props) {
         <ListItem
             id={idNamePair._id}
             key={'listItem' + idNamePair._id}
-            sx={{ marginTop: '15px', display: 'flex', p: 1, paddingLeft: '15px', paddingRight: '0px' }}
+            sx={{
+                marginTop: '15px', display: 'flex', p: 1, paddingLeft: '15px',
+                paddingRight: '0px', paddingTop: 0, paddingBottom: 0,
+            }}
             style={{
                 fontSize: '0pt',
                 width: '100%',
@@ -305,7 +308,8 @@ function ListCard(props) {
                         style={{
                         }}
                     >
-                        <Typography component={'span'}>{publishedDate}</Typography>
+
+                        {!editActive && <Typography component={'span'}>{publishedDate}</Typography>}
                     </Grid>
                 </Grid>
                 <Grid
@@ -328,11 +332,17 @@ function ListCard(props) {
                             alignSelf: 'flex-end'
                         }}
                     >
-                        <Typography component={'span'}
-                            style={{
-                                fontWeight: 'bold', fontSize: '15pt',
-                                color: 'red'
-                            }}><span style={{ color: 'black' }}>Views:</span> {idNamePair.views}</Typography>
+                        {!editActive && (
+                            <Typography
+                                component={'span'}
+                                style={{
+                                    fontWeight: 'bold', fontSize: '12pt',
+                                    color: 'red'
+                                }}>
+                                <span style={{ color: 'black' }}>Views:</span>
+                                {idNamePair.views}
+                            </Typography>
+                        )}
                     </Grid>
                 </Grid>
                 <Grid
@@ -350,34 +360,116 @@ function ListCard(props) {
                     md={1}
                     sx={{ alignItems: 'flex-end' }}
                 >
-                    <Grid item sx={{ p: 1 }}>
+                    <Grid item sx={{ p: 0 }}>
                         {store.activeView === 'HOME' && (
                             <IconButton onClick={(event) => {
                                 handleDeleteList(event, idNamePair._id)
                             }} aria-label='delete'>
-                                <DeleteIcon style={{ fontSize: '30pt' }} />
+                                <DeleteIcon style={{ fontSize: '32pt' }} />
                             </IconButton>
                         )}
                     </Grid>
-                    <Grid item sx={{ p: 1 }}>
+                    <Grid item sx={{ p: 0 }}>
                         {
-                            !editActive ? (
+                            !editActive && (
                                 <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                                    <ExpandMoreIcon style={{ fontSize: '30pt' }} />
-                                </IconButton>
-                            ) : (
-                                <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                                    <ExpandLessIcon style={{ fontSize: '30pt' }} />
+                                    <ExpandMoreIcon style={{ fontSize: '32pt' }} />
                                 </IconButton>
                             )
                         }
 
                     </Grid>
                 </Grid>
+
                 {editActive && expandedViewElements}
-                {editActive && <div>
-                    ASDFASDFAS TEST
-                </div>}
+                <Grid
+                    item
+                    container
+                    md={8}
+                    direction="column"
+                >
+                    <Grid
+                        item
+                        md={3}
+                        sx={{ p: 1, flexGrow: 1 }}
+                    >
+                    </Grid>
+                    <Grid
+                        item
+                        md={3}
+                        sx={{ p: 1, flexGrow: 1 }}
+                        style={{
+                        }}
+                    >
+                    </Grid>
+                    <Grid
+                        item
+                        md={3}
+                        sx={{ p: 1, flexGrow: 1 }}
+                        style={{
+                        }}
+                    >
+                        {editActive && <Typography component={'span'}>{publishedDate}</Typography>}
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    item
+                    direction="column"
+                    md={2}
+                >
+                    <Grid
+                        item
+                        sx={{ alignSelf: 'flex-end', flexGrow: 1, mr: 10, mt: 1 }}
+                    >
+                    </Grid>
+                    <Grid
+                        item
+                        md={3}
+                        sx={{ p: 1, flexGrow: 1, mr: 10 }}
+                        style={{
+                            alignSelf: 'flex-end'
+                        }}
+                    >
+                        {editActive && (
+                            <Typography
+                                component={'span'}
+                                style={{
+                                    fontWeight: 'bold', fontSize: '12pt',
+                                    color: 'red'
+                                }}>
+                                <span style={{ color: 'black' }}>Views:</span>
+                                {idNamePair.views}
+                            </Typography>
+                        )}
+                    </Grid>
+                </Grid>
+                <Grid
+                    item
+                    md={1}
+                    sx={{ mt: 1, flexGrow: 1 }}
+                >
+                </Grid>
+
+                <Grid
+                    item
+                    container
+                    direction="column"
+                    md={1}
+                    sx={{ alignItems: 'flex-end' }}
+                >
+                    <Grid item sx={{ p: 0 }}>
+                    </Grid>
+                    <Grid item sx={{ p: 0 }}>
+                        {
+                            editActive && (
+                                <IconButton onClick={handleToggleEdit} aria-label='edit'>
+                                    <ExpandLessIcon style={{ fontSize: '32pt' }} />
+                                </IconButton>
+                            )
+                        }
+                    </Grid>
+                </Grid>
             </Grid>
         </ListItem>
     return (

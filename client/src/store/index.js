@@ -240,7 +240,7 @@ function GlobalStoreContextProvider(props) {
                 let sortedPairs = sortIdNamePairs(payload.idNamePairs, store.sortBy)
                 return setStore({
                     idNamePairs: sortedPairs,
-                    idItemsComments: store.idItemsComments.filter(obj => obj._id !== payload._id).concat(payload.top5List),
+                    idItemsComments: store.idItemsComments.filter(obj => obj._id !== payload.top5List._id).concat(payload.top5List),
                     currentList: null,
                     listMarkedForDeletion: null,
                     activeView: store.activeView,

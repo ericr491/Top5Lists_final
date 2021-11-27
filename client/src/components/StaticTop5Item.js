@@ -6,10 +6,10 @@ function StaticTop5Item(props) {
         return (
             <ListItem
                 component={"div"}
-                style={{ color: "#D4AF37", fontWeight: "bold" }}
+                style={{ color: "#D4AF37", }}
             >
-                <Typography style={{ marginRight: "3px" }} component={'span'} >{index}.</Typography>
-                <Typography component={'span'} >
+                <Typography style={{ marginRight: "3px", fontWeight: "bold", fontSize: '15pt' }} component={'span'} >{index}.</Typography>
+                <Typography style={{ fontWeight: "bold", fontSize: '15pt' }} component={'span'} >
                     {content}
                 </Typography>
             </ListItem>

@@ -60,7 +60,6 @@ const DeleteModal = forwardRef((props, ref) => {
                         variant="contained"
                         onClick={(event) => {
                             event.stopPropagation()
-                            store.unsetIsItemEditActive()
                             setVisibility(false)
                         }}
                         sx={{ mt: 3, mb: 2, float: "right" }}

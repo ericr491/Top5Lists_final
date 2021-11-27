@@ -23,16 +23,15 @@ function Top5Item(props) {
             key={'item-' + (index + 1)}
             className={itemClass}
         >
-            <TextField
+            {/* <TextField
                 fullWidth
-                autoFocus
-                required
                 onKeyPress={handleKeyPress}
                 defaultValue={props.text}
                 margin="normal"
                 inputProps={{ style: { fontSize: 20 } }}
                 InputLabelProps={{ style: { fontSize: 20 } }}
-            />
+            /> */}
+            <input type="text" defaultValue={props.text} onChange={handleKeyPress} />
         </ListItem >
     )
     // return (

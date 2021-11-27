@@ -13,8 +13,7 @@ import { TextField, Button } from '@mui/material'
 function WorkspaceScreen(props) {
     const { store } = useContext(GlobalStoreContext)
     const { idNamePairs } = props
-    const [isVisible, setVisibility] = useState(false)
-    const [title, setTitle] = useState(idNamePairs?.name || "")
+    const [title, setTitle] = useState("")
     const [itemState, setItemState] = useState(['', '', '', '', ''])
     const [canSave, setCanSave] = useState(true)
     const [canPublish, setCanPublish] = useState(false)
@@ -23,23 +22,30 @@ function WorkspaceScreen(props) {
     // const [userPublishedLists, setUserPublishedLists] = useState(idNamePairs.map(pair => pair.) || [])
 
 
-    let publishedNames = idNamePairs?.filter(pair => pair.published).map(pair => pair.name) || []
+    useEffect(() => {
+        if (store.currentList) {
+            setItemState([...store.currentList.items])
+            setTitle(store.currentList.name)
+        }
+    }, [store.currentList])
 
     useEffect(() => {
         // when itemState is uploaded check if there are empty input fields
-        if (title !== "" && itemState.every(numChars => numChars.length !== 0) && publishedNames.includes(title)) {
+        if (title !== "" && itemState.every(numChars => numChars.length !== 0) && !publishedNames.includes(title)) {
             setCanPublish(true)
         } else {
             setCanPublish(false)
         }
-    }, [itemState])
+    }, [itemState, title])
+
+    let publishedNames = idNamePairs?.filter(pair => pair.published).map(pair => pair.name) || []
 
     function handleOnChange(event) {
         setTitle(event.target.value)
     }
 
     async function handleSave(event) {
-        await store.updateCurrentList()
+        await store.updateCurrentList(title, itemState)
     }
 
     function handleKeyPress(event, index) {
@@ -90,7 +96,7 @@ function WorkspaceScreen(props) {
             <Button
                 variant="contained"
                 onClick={handleSave}
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2, position: "absolute", top: '100%', left: '90%' }}
                 disabled={!canSave}
             >
                 Save
@@ -100,7 +106,7 @@ function WorkspaceScreen(props) {
                 onClick={(event) => {
                     event.stopPropagation()
                 }}
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2, position: "absolute", top: '100%', left: '100%' }}
                 disabled={!canPublish}
             >
                 Publish

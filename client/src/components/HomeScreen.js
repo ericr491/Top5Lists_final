@@ -50,15 +50,25 @@ const HomeScreen = (props) => {
                 }
             </List>
     }
-    return (
-        <div id="top5-list-selector">
-            <div id="list-selector-list">
-                {
-                    listCard
-                }
+
+    if (store.activeView === 'EDIT') {
+        return (
+            <div id="top5-list-selector">
+                <WorkspaceScreen idNamePairs={idNamePairs} />
             </div>
-            <WorkspaceScreen />
-        </div>)
+        )
+    } else {
+        return (
+            <div id="top5-list-selector">
+                <div id="list-selector-list">
+                    {
+                        listCard
+                    }
+                </div>
+            </div>
+        )
+    }
+
 }
 
 export default HomeScreen

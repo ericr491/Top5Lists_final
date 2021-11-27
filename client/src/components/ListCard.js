@@ -50,11 +50,21 @@ function ListCard(props) {
 
     async function handleToggleEdit(event) {
         event.stopPropagation()
-        await store.updateItemsAndComments(idNamePair._id)
+        if (!editActive) {
+            const fullList = await api.getTop5ListById(idNamePair._id)
+            const newList = {
+                ...fullList.data.top5List,
+                views: fullList.data.top5List.views + 1
+            }
+            await store.updateViewsCount(newList._id, newList)
+        }
+        // else {
+        //     await store.updateItemsAndComments(idNamePair._id)
+        // }
         toggleEdit()
     }
 
-    function toggleEdit() {
+    async function toggleEdit() {
         let newActive = !editActive
         setEditActive(newActive)
     }

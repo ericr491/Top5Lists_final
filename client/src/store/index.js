@@ -25,6 +25,8 @@ export const GlobalStoreActionType = {
     SET_TYPE_OF_VIEW_ACTIVE: "SET_TYPE_OF_VIEW_ACTIVE",
     SET_SORT_BY: "SET_SORT_BY",
     UPDATE_ITEMS_AND_COMMENTS: "UPDATE_ITEMS_AND_COMMENTS",
+    UPDATE_VIEWS: "UPDATE_VIEWS",
+    HANDLE_SAVE_AND_PUBLISH: "HANDLE_SAVE_AND_PUBLISH",
 }
 
 export const ActiveViewType = {
@@ -45,6 +47,7 @@ export const SortByType = {
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
 
+
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
 // AVAILABLE TO THE REST OF THE APPLICATION
 function GlobalStoreContextProvider(props) {
@@ -63,12 +66,41 @@ function GlobalStoreContextProvider(props) {
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
     const { auth } = useContext(AuthContext)
 
+    function sortIdNamePairs(pairsArray, sortBy) {
+        switch (sortBy) {
+            case SortByType.OLD:
+                return pairsArray.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
+            case SortByType.MOST_VIEWS:
+                return pairsArray.sort((a, b) => b.views - a.views)
+            case SortByType.MOST_LIKES:
+                return pairsArray.sort((a, b) => b.likes.length - a.likes.length)
+            case SortByType.MOST_DISLIKES:
+                return pairsArray.sort((a, b) => b.dislikes.length - a.dislikes.length)
+            case SortByType.NEW: // Newest is first
+            default:
+                return pairsArray.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate))
+        }
+    }
+
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
     // HANDLE EVERY TYPE OF STATE CHANGE
     const storeReducer = (action) => {
         const { type, payload } = action
         switch (type) {
             // STOP EDITING THE CURRENT LIST
+            case GlobalStoreActionType.HANDLE_SAVE_AND_PUBLISH: {
+                let pairsArray = sortIdNamePairs(payload, store.sortBy)
+                return setStore({
+                    idNamePairs: pairsArray,
+                    idItemsComments: store.idItemsComments,
+                    currentList: null,
+                    listMarkedForDeletion: null,
+                    activeView: ActiveViewType.HOME,
+                    sortBy: store.sortBy,
+                    searchBarContents: store.searchBarContents
+                })
+            }
+
             case GlobalStoreActionType.CLOSE_CURRENT_EDITING_LIST: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
@@ -117,25 +149,25 @@ function GlobalStoreContextProvider(props) {
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
             case GlobalStoreActionType.LOAD_ID_NAME_PAIRS: {
-                let pairsArray = payload
-                switch (store.sortBy) {
-                    case SortByType.OLD:
-                        pairsArray = pairsArray.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
-                        break
-                    case SortByType.MOST_VIEWS:
-                        pairsArray = pairsArray.sort((a, b) => b.views - a.views)
-                        break
-                    case SortByType.MOST_LIKES:
-                        pairsArray = pairsArray.sort((a, b) => b.likes.length - a.likes.length)
-                        break
-                    case SortByType.MOST_DISLIKES:
-                        pairsArray = pairsArray.sort((a, b) => b.dislikes.length - a.dislikes.length)
-                        break
-                    case SortByType.NEW: // Newest is first
-                    default:
-                        pairsArray = pairsArray.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate))
-                        break
-                }
+                let pairsArray = sortIdNamePairs(payload, store.sortBy)
+                // switch (store.sortBy) {
+                //     case SortByType.OLD:
+                //         pairsArray = pairsArray.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
+                //         break
+                //     case SortByType.MOST_VIEWS:
+                //         pairsArray = pairsArray.sort((a, b) => b.views - a.views)
+                //         break
+                //     case SortByType.MOST_LIKES:
+                //         pairsArray = pairsArray.sort((a, b) => b.likes.length - a.likes.length)
+                //         break
+                //     case SortByType.MOST_DISLIKES:
+                //         pairsArray = pairsArray.sort((a, b) => b.dislikes.length - a.dislikes.length)
+                //         break
+                //     case SortByType.NEW: // Newest is first
+                //     default:
+                //         pairsArray = pairsArray.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate))
+                //         break
+                // }
                 return setStore({
                     idNamePairs: pairsArray,
                     idItemsComments: store.idItemsComments,
@@ -204,41 +236,75 @@ function GlobalStoreContextProvider(props) {
                     // searchBarContents: store.searchBarContents
                 })
             }
+            case GlobalStoreActionType.UPDATE_VIEWS: {
+                let sortedPairs = sortIdNamePairs(payload.idNamePairs, store.sortBy)
+                return setStore({
+                    idNamePairs: sortedPairs,
+                    idItemsComments: store.idItemsComments.filter(obj => obj._id !== payload._id).concat(payload.top5List),
+                    currentList: null,
+                    listMarkedForDeletion: null,
+                    activeView: store.activeView,
+                    sortBy: store.sortBy,
+                    searchBarContents: "",
+                })
+            }
             default:
                 return store
         }
     }
+
+
 
     // THESE ARE THE FUNCTIONS THAT WILL UPDATE OUR STORE AND
     // DRIVE THE STATE OF THE APPLICATION. WE'LL CALL THESE IN 
     // RESPONSE TO EVENTS INSIDE OUR COMPONENTS.
 
     // THIS FUNCTION PROCESSES CHANGING A LIST NAME
-    store.changeListName = async function (id, newName) {
-        let response = await api.getTop5ListById(id)
+    // store.changeListName = async function (id, newName) {
+    //     let response = await api.getTop5ListById(id)
+    //     if (response.data.success) {
+    //         let top5List = response.data.top5List
+    //         top5List.name = newName
+    //         async function updateList(top5List) {
+    //             response = await api.updateTop5ListById(top5List._id, top5List)
+    //             if (response.data.success) {
+    //                 async function getListPairs(top5List) {
+    //                     response = await api.getTop5ListPairs()
+    //                     if (response.data.success) {
+    //                         let pairsArray = response.data.idNamePairs
+    //                         storeReducer({
+    //                             type: GlobalStoreActionType.CHANGE_LIST_NAME,
+    //                             payload: {
+    //                                 idNamePairs: pairsArray,
+    //                                 top5List: top5List
+    //                             }
+    //                         })
+    //                     }
+    //                 }
+    //                 getListPairs(top5List)
+    //             }
+    //         }
+    //         updateList(top5List)
+    //     }
+    // }
+
+    store.updateViewsCount = async function (id, newList) {
+        let response = await api.unimportantUpdateTop5ListById(id, newList)
         if (response.data.success) {
-            let top5List = response.data.top5List
-            top5List.name = newName
-            async function updateList(top5List) {
-                response = await api.updateTop5ListById(top5List._id, top5List)
+            async function getListPairs(top5List) {
+                response = await api.getTop5ListPairs()
                 if (response.data.success) {
-                    async function getListPairs(top5List) {
-                        response = await api.getTop5ListPairs()
-                        if (response.data.success) {
-                            let pairsArray = response.data.idNamePairs
-                            storeReducer({
-                                type: GlobalStoreActionType.CHANGE_LIST_NAME,
-                                payload: {
-                                    idNamePairs: pairsArray,
-                                    top5List: top5List
-                                }
-                            })
+                    let pairsArray = response.data.idNamePairs
+                    storeReducer({
+                        type: GlobalStoreActionType.UPDATE_VIEWS,
+                        payload: {
+                            idNamePairs: pairsArray,
+                            top5List: top5List
                         }
-                    }
-                    getListPairs(top5List)
+                    })
                 }
             }
-            updateList(top5List)
+            getListPairs(newList)
         }
     }
 
@@ -253,7 +319,7 @@ function GlobalStoreContextProvider(props) {
     }
 
     // THIS FUNCTION CREATES A NEW LIST
-    store.createNewList = async function (name, items, isPublished = false) {
+    store.createNewList = async function (name = "Untitled", items = ['', '', '', '', ''], isPublished = false) {
         let payload = {
             name,
             items,
@@ -318,7 +384,7 @@ function GlobalStoreContextProvider(props) {
         let response = await api.deleteTop5ListById(listToDelete._id)
         if (response.data.success) {
             store.loadIdNamePairs()
-            history.push("/")
+            // history.push("/home/")
         }
     }
 
@@ -353,13 +419,23 @@ function GlobalStoreContextProvider(props) {
     }
 
 
-    store.updateCurrentList = async function () {
-        const response = await api.updateTop5ListById(store.currentList._id, store.currentList)
+    store.updateCurrentList = async function (newTitle, newItems) {
+        let updatedCurrentList = { ...store.currentList, name: newTitle, items: [...newItems] }
+
+        const response = await api.updateTop5ListById(store.currentList._id, updatedCurrentList)
         if (response.data.success) {
-            storeReducer({
-                type: GlobalStoreActionType.SET_CURRENT_EDITING_LIST,
-                payload: store.currentList
-            })
+            const response = await api.getTop5ListPairs()
+            if (response.data.success) {
+                let pairsArray = response.data.idNamePairs
+
+                storeReducer({
+                    type: GlobalStoreActionType.HANDLE_SAVE_AND_PUBLISH,
+                    payload: pairsArray
+                })
+            }
+            else {
+                console.log("API FAILED TO GET THE LIST PAIRS")
+            }
         }
     }
 
@@ -383,6 +459,7 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
+
     // When a user comments on a Post a simple concat is needed
     store.postAComment = async function (id, comment) {
         const response = await api.postComment({ top5ListId: id, comment })
@@ -399,6 +476,7 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
+
     store.setSearchBarContents = function (newContents) {
         storeReducer({
             type: GlobalStoreActionType.SET_SEARCH_BAR_CONTENTS,
@@ -407,25 +485,25 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.setSortType = function (sortType) {
-        let pairsArray = store.idNamePairs
-        switch (sortType) {
-            case SortByType.OLD:
-                pairsArray = pairsArray.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
-                break
-            case SortByType.MOST_VIEWS:
-                pairsArray = pairsArray.sort((a, b) => b.views - a.views)
-                break
-            case SortByType.MOST_LIKES:
-                pairsArray = pairsArray.sort((a, b) => b.likes.length - a.likes.length)
-                break
-            case SortByType.MOST_DISLIKES:
-                pairsArray = pairsArray.sort((a, b) => b.dislikes.length - a.dislikes.length)
-                break
-            case SortByType.NEW: // Newest is first
-            default:
-                pairsArray = pairsArray.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate))
-                break
-        }
+        let pairsArray = sortIdNamePairs(store.idNamePairs, sortType)
+        // switch (sortType) {
+        //     case SortByType.OLD:
+        //         pairsArray = pairsArray.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
+        //         break
+        //     case SortByType.MOST_VIEWS:
+        //         pairsArray = pairsArray.sort((a, b) => b.views - a.views)
+        //         break
+        //     case SortByType.MOST_LIKES:
+        //         pairsArray = pairsArray.sort((a, b) => b.likes.length - a.likes.length)
+        //         break
+        //     case SortByType.MOST_DISLIKES:
+        //         pairsArray = pairsArray.sort((a, b) => b.dislikes.length - a.dislikes.length)
+        //         break
+        //     case SortByType.NEW: // Newest is first
+        //     default:
+        //         pairsArray = pairsArray.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate))
+        //         break
+        // }
         storeReducer({
             type: GlobalStoreActionType.SET_SORT_BY,
             payload: { sortType, pairsArray }

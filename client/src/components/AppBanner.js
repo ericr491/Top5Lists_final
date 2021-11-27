@@ -79,18 +79,18 @@ export default function AppBanner() {
     function getAccountMenu(loggedIn) {
         if (loggedIn) {
             return (
-                <Box>
-                    {auth.user.firstName[0].toUpperCase() + auth.user.lastName[0].toUpperCase()}
+                <Box style={{ border: '2px black solid', backgroundColor: 'rgb(170, 43, 180)', borderRadius: '50%', height: '50px', width: '50px' }}>
+                    <sub>{auth.user.firstName[0].toUpperCase() + auth.user.lastName[0].toUpperCase()}</sub>
                 </Box>
             )
         } else {
-            return <AccountCircle />
+            return <AccountCircle sx={{ fontSize: '30pt' }} />
         }
     }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" style={{ backgroundColor: "#E0E0E0" }}>
+            <AppBar position="static" style={{ backgroundColor: "#C4C4C4" }}>
                 <Toolbar>
                     <Typography
                         variant="h4"
@@ -103,13 +103,13 @@ export default function AppBanner() {
                     <Box sx={{ flexGrow: 1 }}></Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <IconButton
-                            size="large"
+                            size="medium"
                             edge="end"
                             aria-label="account of current user"
                             aria-controls={menuId}
                             aria-haspopup="true"
                             onClick={handleProfileMenuOpen}
-                            color="inherit"
+                            color="default"
                         >
                             {getAccountMenu(auth.loggedIn)}
                         </IconButton>

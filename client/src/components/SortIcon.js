@@ -13,6 +13,13 @@ export default function SortIcon(props) {
     const isMenuOpen = Boolean(anchorEl)
     const { disabled } = props
 
+    // let hasBorderClass = "add-a-border"
+    let currentSortBy = store.sortBy
+
+    let borderStyle = {
+        border: '1px black solid',
+    }
+
     const handleProfileMenuOpen = (event) => {
         if (!disabled)
             setAnchorEl(event.currentTarget)
@@ -46,29 +53,28 @@ export default function SortIcon(props) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={() => { handleMenuItemClick(SortByType.NEW) }}>Publish Date (Newest)</MenuItem>
-            <MenuItem onClick={() => { handleMenuItemClick(SortByType.OLD) }}>Publish Date (Oldest)</MenuItem>
-            <MenuItem onClick={() => { handleMenuItemClick(SortByType.MOST_VIEWS) }}>Views</MenuItem>
-            <MenuItem onClick={() => { handleMenuItemClick(SortByType.MOST_LIKES) }}>Likes</MenuItem>
-            <MenuItem onClick={() => { handleMenuItemClick(SortByType.MOST_DISLIKES) }}>Dislikes</MenuItem>
+            <MenuItem sx={currentSortBy === SortByType.NEW ? borderStyle : {}} onClick={() => { handleMenuItemClick(SortByType.NEW) }}>Publish Date (Newest)</MenuItem>
+            <MenuItem sx={currentSortBy === SortByType.OLD ? borderStyle : {}} onClick={() => { handleMenuItemClick(SortByType.OLD) }}>Publish Date (Oldest)</MenuItem>
+            <MenuItem sx={currentSortBy === SortByType.MOST_VIEWS ? borderStyle : {}} onClick={() => { handleMenuItemClick(SortByType.MOST_VIEWS) }}>Views</MenuItem>
+            <MenuItem sx={currentSortBy === SortByType.MOST_LIKES ? borderStyle : {}} onClick={() => { handleMenuItemClick(SortByType.MOST_LIKES) }}>Likes</MenuItem>
+            <MenuItem sx={currentSortBy === SortByType.MOST_DISLIKES ? borderStyle : {}} onClick={() => { handleMenuItemClick(SortByType.MOST_DISLIKES) }}>Dislikes</MenuItem>
         </Menu>
     )
 
     let menu = sortByMenu
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <Typography sx={{ color: "black" }}>
+        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row' }}>
+            <Typography sx={{ color: "black", fontWeight: 'bold', mt: 1, mb: 1, fontSize: '13pt' }}>
                 SORT BY
             </Typography>
             <SortSVGIcon
-                size="large"
                 edge="end"
                 aria-label="select sort option"
                 aria-controls={menuId}
                 aria-haspopup="true"
                 onClick={handleProfileMenuOpen}
-                style={{ fill: 'black' }}
+                style={{ fill: 'black', fontSize: '50pt' }}
             >
             </SortSVGIcon>
             {

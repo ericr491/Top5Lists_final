@@ -18,6 +18,7 @@ import Comment from './Comment'
 import Typography from '@mui/material/Typography'
 import AuthContext from '../auth'
 import api from '../api'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -148,12 +149,13 @@ function ListCard(props) {
             <Box
                 style={{ color: "green" }}
             >
-                Published: {date}
+                <span style={{ color: 'black' }}>Published: </span>
+                <span style={{ textDecoration: 'none' }}>{date}</span>
             </Box>
         )
     })()
     if (!idNamePair.published) {
-        publishedDate = <Box style={{ color: "red" }} onClick={() => store.setCurrentList(idNamePair._id)}>Edit</Box>
+        publishedDate = <Box style={{ color: "red" }} onClick={handleEditOnClick}>Edit</Box>
     }
 
     let items = undefined
@@ -177,16 +179,14 @@ function ListCard(props) {
         )
         textField = <TextField
             margin="normal"
-            fullWidth
             id={"comment-" + idNamePair._id}
             name="name"
             autoComplete="Comment"
             placeholder="Add comment"
             onKeyPress={handleKeyPress}
             onChange={handleUpdateText}
-            inputProps={{ style: { fontSize: 16 } }}
-            InputLabelProps={{ style: { fontSize: 12 } }}
-            sx={{ backgroundColor: "white" }}
+            inputProps={{ style: { fontSize: 16, padding: 8 } }}
+            sx={{ backgroundColor: "white", marginRight: 10, width: '95%' }}
             value={text}
             disabled={!auth.loggedIn}
         />
@@ -196,20 +196,20 @@ function ListCard(props) {
     let dislikeButton = undefined
     if (liked) {
         likeButton = <Typography component={'span'}>
-            <ThumbUpIcon onClick={(event) => handleLike(event, idNamePair._id)} />
+            <ThumbUpIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleLike(event, idNamePair._id)} />
             {idNamePair.likes.length}</Typography>
     } else {
         likeButton = <Typography component={'span'}>
-            <ThumbUpOutlinedIcon onClick={(event) => handleLike(event, idNamePair._id)} />
+            <ThumbUpOutlinedIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleLike(event, idNamePair._id)} />
             {idNamePair.likes.length}</Typography>
     }
     if (disliked) {
         dislikeButton = <Typography component={'span'}>
-            <ThumbDownIcon onClick={(event) => handleDislike(event, idNamePair._id)} />
+            <ThumbDownIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleDislike(event, idNamePair._id)} />
             {idNamePair.dislikes.length}</Typography>
     } else {
         dislikeButton = <Typography component={'span'}>
-            <ThumbDownOutlinedIcon onClick={(event) => handleDislike(event, idNamePair._id)} />
+            <ThumbDownOutlinedIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleDislike(event, idNamePair._id)} />
             {idNamePair.dislikes.length}</Typography>
     }
 
@@ -246,7 +246,7 @@ function ListCard(props) {
                 variant="none"
             >
                 {comments && comments.length > 0
-                    ? <List >{comments}</List> : <></>}
+                    ? <List sx={{ mr: 2 }}>{comments}</List> : <></>}
             </Paper>
             {textField ? textField : <></>}
         </Grid>
@@ -258,7 +258,7 @@ function ListCard(props) {
             key={'listItem' + idNamePair._id}
             sx={{ marginTop: '15px', display: 'flex', p: 1, paddingLeft: '15px', paddingRight: '0px' }}
             style={{
-                fontSize: '18pt',
+                fontSize: '0pt',
                 width: '100%',
                 border: '1px solid black',
                 borderRadius: '10px',
@@ -274,7 +274,7 @@ function ListCard(props) {
                 <Grid
                     item
                     container
-                    md={5}
+                    md={8}
                     direction="column"
                 >
                     <Grid
@@ -293,7 +293,10 @@ function ListCard(props) {
                         style={{
                         }}
                     >
-                        <Typography component={'span'} style={{ color: "blue" }}>By: {idNamePair.ownerName}</Typography>
+                        <Typography component={'span'} style={{ color: "blue" }}>
+                            <span style={{ color: 'black' }}>By: </span>
+                            <span style={{ textDecoration: 'underline' }}>{idNamePair.ownerName}</span>
+                        </Typography>
                     </Grid>
                     <Grid
                         item
@@ -309,26 +312,33 @@ function ListCard(props) {
                     container
                     item
                     direction="column"
-                    md={3}
+                    md={2}
                 >
                     <Grid
                         item
+                        sx={{ alignSelf: 'flex-end', flexGrow: 1, mr: 10, mt: 1 }}
                     >
                         {likeButton}
                     </Grid>
                     <Grid
                         item
                         md={3}
-                        sx={{ p: 1, flexGrow: 1 }}
+                        sx={{ p: 1, flexGrow: 1, mr: 10 }}
                         style={{
+                            alignSelf: 'flex-end'
                         }}
                     >
-                        <Typography component={'span'}>Views: {idNamePair.views}</Typography>
+                        <Typography component={'span'}
+                            style={{
+                                fontWeight: 'bold', fontSize: '15pt',
+                                color: 'red'
+                            }}><span style={{ color: 'black' }}>Views:</span> {idNamePair.views}</Typography>
                     </Grid>
                 </Grid>
                 <Grid
                     item
-                    md={2}
+                    md={1}
+                    sx={{ mt: 1, flexGrow: 1 }}
                 >
                     {dislikeButton}
                 </Grid>
@@ -337,24 +347,37 @@ function ListCard(props) {
                     item
                     container
                     direction="column"
-                    md={2}
+                    md={1}
+                    sx={{ alignItems: 'flex-end' }}
                 >
                     <Grid item sx={{ p: 1 }}>
                         {store.activeView === 'HOME' && (
                             <IconButton onClick={(event) => {
                                 handleDeleteList(event, idNamePair._id)
                             }} aria-label='delete'>
-                                <DeleteIcon style={{ fontSize: '48pt' }} />
+                                <DeleteIcon style={{ fontSize: '30pt' }} />
                             </IconButton>
                         )}
                     </Grid>
                     <Grid item sx={{ p: 1 }}>
-                        <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                            <ExpandMoreIcon style={{ fontSize: '48pt' }} />
-                        </IconButton>
+                        {
+                            !editActive ? (
+                                <IconButton onClick={handleToggleEdit} aria-label='edit'>
+                                    <ExpandMoreIcon style={{ fontSize: '30pt' }} />
+                                </IconButton>
+                            ) : (
+                                <IconButton onClick={handleToggleEdit} aria-label='edit'>
+                                    <ExpandLessIcon style={{ fontSize: '30pt' }} />
+                                </IconButton>
+                            )
+                        }
+
                     </Grid>
                 </Grid>
                 {editActive && expandedViewElements}
+                {editActive && <div>
+                    ASDFASDFAS TEST
+                </div>}
             </Grid>
         </ListItem>
     return (

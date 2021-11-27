@@ -3,7 +3,7 @@ import Top5Item from './Top5Item.js'
 import List from '@mui/material/List'
 import { Typography } from '@mui/material'
 import { GlobalStoreContext } from '../store/index.js'
-import { TextField, Button } from '@mui/material'
+import { TextField, Button, Box, Paper } from '@mui/material'
 /*
     This React component lets us edit a loaded list, which only
     happens when we are on the proper route.
@@ -48,6 +48,10 @@ function WorkspaceScreen(props) {
         await store.updateCurrentList(title, itemState)
     }
 
+    async function handlePublished(event) {
+        await store.updateCurrentList(title, itemState, true)
+    }
+
     function handleKeyPress(event, index) {
         let newState = [...itemState]
         newState[index] = event.target.value
@@ -57,7 +61,7 @@ function WorkspaceScreen(props) {
     let editItems = ""
     if (store.currentList) {
         editItems =
-            <List id="edit-items" sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            <List >
                 {
                     store.currentList.items.map((item, index) => (
                         <Top5Item
@@ -73,45 +77,92 @@ function WorkspaceScreen(props) {
         return <></>
     }
     return (
-        <div id="top5-workspace">
+        // <div id="top5-workspace">
+        <Box
+            // id='list-selector-list'
+            sx={{
+                backgroundColor: '#D4D4F5',
+                border: '2px black solid',
+                borderRadius: '10px',
+                width: "98%",
+                height: "100%",
+                margin: '1em',
+                minHeight: '450px',
+                display: "relative",
+                fontWeight: 'bold',
+            }}
+        >
+
             <TextField
-                fullWidth
                 value={title}
                 onChange={handleOnChange}
                 placeholder={"title"}
-                inputProps={{ style: { fontSize: 16 } }}
-                InputLabelProps={{ style: { fontSize: 12 } }}
-                sx={{ backgroundColor: "white", position: "absolute", top: '0', left: '0', zIndex: '100' }}
-            />
-            <div id="workspace-edit">
-                <div id="edit-numbering">
-                    <div className="item-number"><Typography variant="h5">1.</Typography></div>
-                    <div className="item-number"><Typography variant="h5">2.</Typography></div>
-                    <div className="item-number"><Typography variant="h5">3.</Typography></div>
-                    <div className="item-number"><Typography variant="h5">4.</Typography></div>
-                    <div className="item-number"><Typography variant="h5">5.</Typography></div>
-                </div>
-                {editItems}
-            </div>
-            <Button
-                variant="contained"
-                onClick={handleSave}
-                sx={{ mt: 3, mb: 2, position: "absolute", top: '100%', left: '90%' }}
-                disabled={!canSave}
-            >
-                Save
-            </Button>
-            <Button
-                variant="contained"
-                onClick={(event) => {
-                    event.stopPropagation()
+                inputProps={{ style: { fontSize: 16, padding: 1 } }}
+                sx={{
+                    backgroundColor: "white",
+                    // zIndex: '100',
+                    width: "50%",
+                    marginTop: 1,
+                    marginLeft: 2,
                 }}
-                sx={{ mt: 3, mb: 2, position: "absolute", top: '100%', left: '100%' }}
+            />
+            <Box
+                sx={{
+                    backgroundColor: '#123456',
+                    width: '98%',
+                    marginLeft: 2,
+                    marginTop: 2,
+                    borderRadius: '10px'
+                }}
+            >
+                {editItems}
+            </Box>
+            {/* <div >
+                    <div >
+                        <div className="item-number"><Typography variant="h5">1.</Typography></div>
+                        <div className="item-number"><Typography variant="h5">2.</Typography></div>
+                        <div className="item-number"><Typography variant="h5">3.</Typography></div>
+                        <div className="item-number"><Typography variant="h5">4.</Typography></div>
+                        <div className="item-number"><Typography variant="h5">5.</Typography></div>
+                    </div>
+                    {editItems}
+                </div> */}
+            <Button
+                variant="contained"
+                onClick={handlePublished}
+                sx={{
+                    mt: 2, mb: 2,
+                    float: 'right',
+                    mr: 3,
+                    backgroundColor: '#DDDDDD',
+                    color: 'black',
+                    borderRadius: '10px',
+                    fontSize: '20px',
+                    fontWeight: 'bold'
+                }}
                 disabled={!canPublish}
             >
                 Publish
             </Button>
-        </div>
+            <Button
+                variant="contained"
+                onClick={handleSave}
+                sx={{
+                    mt: 2, mb: 2, mr: 3,
+                    float: 'right',
+                    backgroundColor: '#DDDDDD',
+                    color: 'black',
+                    borderRadius: '10px',
+                    fontSize: '20px',
+                    fontWeight: 'bold'
+                }}
+                disabled={!canSave}
+            >
+                Save
+            </Button>
+        </Box>
+
+        /* </div> */
     )
 }
 

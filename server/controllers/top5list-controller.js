@@ -218,36 +218,59 @@ updateUnimportantTop5List = async (req, res) => {
         })
     }
 
-    Top5List.findOne({ _id: req.params.id }, (err, top5List) => {
-        console.log("top5List found: " + JSON.stringify(top5List))
-        if (err) {
-            return res.status(404).json({
-                err,
-                message: 'Top 5 List not found!',
-            })
-        }
-
-        top5List.likes = body.likes
-        top5List.dislikes = body.dislikes
-        top5List.views = body.views
-        top5List
-            .save()
-            .then(() => {
-                console.log("SUCCESS!!!")
-                return res.status(200).json({
-                    success: true,
-                    id: top5List._id,
-                    message: 'Top 5 List updated!',
-                })
-            })
-            .catch(error => {
-                console.log("FAILURE: " + JSON.stringify(error))
+    Top5List
+        .findOneAndUpdate(
+            { _id: req.params.id },
+            { likes: body.likes, dislikes: body.dislikes, views: body.views },
+            { new: true, timestamps: false, useFindAndModify: false }
+        )
+        .exec((err, top5List) => {
+            if (err) {
                 return res.status(404).json({
-                    error,
-                    message: 'Top 5 List not updated!',
+                    err,
+                    message: 'Top 5 List not found!',
                 })
+            }
+            console.log("top5List found and updated: " + JSON.stringify(top5List))
+
+            return res.status(200).json({
+                success: true,
+                id: top5List._id,
+                message: 'Top 5 List updated!',
             })
-    })
+        })
+
+
+    // Top5List.findOne({ _id: req.params.id }, (err, top5List) => {
+    //     console.log("top5List found: " + JSON.stringify(top5List))
+    //     if (err) {
+    //         return res.status(404).json({
+    //             err,
+    //             message: 'Top 5 List not found!',
+    //         })
+    //     }
+
+    //     top5List.likes = body.likes
+    //     top5List.dislikes = body.dislikes
+    //     top5List.views = body.views
+    //     top5List
+    //         .save()
+    //         .then(() => {
+    //             console.log("SUCCESS!!!")
+    //             return res.status(200).json({
+    //                 success: true,
+    //                 id: top5List._id,
+    //                 message: 'Top 5 List updated!',
+    //             })
+    //         })
+    //         .catch(error => {
+    //             console.log("FAILURE: " + JSON.stringify(error))
+    //             return res.status(404).json({
+    //                 error,
+    //                 message: 'Top 5 List not updated!',
+    //             })
+    //         })
+    // })
 }
 
 module.exports = {

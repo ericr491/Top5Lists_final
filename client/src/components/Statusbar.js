@@ -22,11 +22,11 @@ function Statusbar() {
         case ActiveViewType.EDIT:
             text += "Your Lists"
             addButton = <Fab
-                color="primary"
+                color="default"
                 aria-label="add"
                 id="add-list-button"
                 onClick={handleCreateNewList}
-                disabled={store.activeView == ActiveViewType.EDIT}
+                disabled={store.activeView === ActiveViewType.EDIT}
             >
                 <AddIcon />
             </Fab>

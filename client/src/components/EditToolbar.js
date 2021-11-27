@@ -35,52 +35,55 @@ function EditToolbar() {
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             store.setSearchBarContents(textField)
-            setTextField("")
         }
     }
 
     function handleClick(view) {
         if (store.activeView !== view) {
             store.setActiveView(view)
+            setTextField("")
         }
     }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" style={{ backgroundColor: "#E0E0E0" }}>
+            <AppBar position="static" elevation={0} style={{ backgroundColor: "#E0E0E0" }}>
                 <Toolbar>
                     <Button
                         id='home-button'
                         onClick={() => handleClick(ActiveViewType.HOME)}
                         disabled={!auth.loggedIn || isEditMode}
                         variant={activeView === ActiveViewType.HOME ? "outlined" : "text"}
+                        sx={{ ml: '1em', mr: '1em' }}
                     >
-                        <HomeOutlinedIcon style={{ fill: 'black' }} />
+                        <HomeOutlinedIcon style={{ fill: 'black', fontSize: '30pt' }} />
                     </Button>
                     <Button
                         id='all-button'
                         onClick={() => handleClick(ActiveViewType.ALL)}
                         disabled={isEditMode}
                         variant={activeView === ActiveViewType.ALL ? "outlined" : "text"}
+                        sx={{ ml: '1em', mr: '1em' }}
                     >
-                        <GroupOutlinedIcon style={{ fill: 'black' }} />
+                        <GroupOutlinedIcon style={{ fill: 'black', fontSize: '30pt' }} />
                     </Button>
                     <Button
                         id='user-button'
                         onClick={() => handleClick(ActiveViewType.USER)}
                         disabled={isEditMode}
                         variant={activeView === ActiveViewType.USER ? "outlined" : "text"}
-
+                        sx={{ ml: '1em', mr: '1em' }}
                     >
-                        <PersonOutlinedIcon style={{ fill: 'black' }} />
+                        <PersonOutlinedIcon style={{ fill: 'black', fontSize: '30pt' }} />
                     </Button>
                     <Button
                         id='community-button'
                         onClick={() => handleClick(ActiveViewType.COMMUNITY)}
                         disabled={isEditMode}
                         variant={activeView === ActiveViewType.COMMUNITY ? "outlined" : "text"}
+                        sx={{ ml: '1em', mr: '1em' }}
                     >
-                        <SummarizeOutlinedIcon style={{ fill: 'black' }} />
+                        <SummarizeOutlinedIcon style={{ fill: 'black', fontSize: '30pt' }} />
                     </Button>
                     <SearchBar
                         textField={textField}

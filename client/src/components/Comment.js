@@ -7,13 +7,15 @@ function Comment(props) {
             <ListItem
                 sx={{
                     backgroundColor: "#D4AF37",
-                    marginTop: "10px",
                     marginBottom: "10px",
                     border: "1px solid black",
                     borderRadius: "10px",
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
                 }}
             >
-                <Typography component={'span'} sx={{ color: "blue" }}>{author}</Typography>
+                <Typography variant={'h6'} sx={{ color: "blue", textDecoration: "underline" }}>{author}</Typography>
                 <Typography component={'span'} >
                     {comment}
                 </Typography>

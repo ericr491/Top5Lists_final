@@ -14,7 +14,6 @@ function SearchBar(props) {
     return (
         <TextField
             margin="normal"
-            fullWidth
             id={"searchBar"}
             name="search"
             autoComplete="Search"
@@ -23,7 +22,7 @@ function SearchBar(props) {
             onChange={handleUpdateText}
             inputProps={{ style: { fontSize: 16 } }}
             InputLabelProps={{ style: { fontSize: 12 } }}
-            sx={{ backgroundColor: "white" }}
+            sx={{ backgroundColor: "white", mr: 2, ml: 2, width: "57%" }}
             value={textField}
             disabled={disabled}
         />

@@ -68,7 +68,7 @@ function GlobalStoreContextProvider(props) {
 
     function sortIdNamePairs(pairsArray, sortBy) {
         switch (sortBy) {
-            case SortByType.OLD:
+            case SortByType.NEW:
                 return pairsArray.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
             case SortByType.MOST_VIEWS:
                 return pairsArray.sort((a, b) => b.views - a.views)
@@ -76,7 +76,7 @@ function GlobalStoreContextProvider(props) {
                 return pairsArray.sort((a, b) => b.likes.length - a.likes.length)
             case SortByType.MOST_DISLIKES:
                 return pairsArray.sort((a, b) => b.dislikes.length - a.dislikes.length)
-            case SortByType.NEW: // Newest is first
+            case SortByType.OLD: // Newest is first
             default:
                 return pairsArray.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate))
         }
@@ -419,8 +419,13 @@ function GlobalStoreContextProvider(props) {
     }
 
 
-    store.updateCurrentList = async function (newTitle, newItems) {
-        let updatedCurrentList = { ...store.currentList, name: newTitle, items: [...newItems] }
+    store.updateCurrentList = async function (newTitle, newItems, isPublished = false) {
+        let updatedCurrentList = {
+            ...store.currentList,
+            name: newTitle,
+            items: [...newItems],
+            published: isPublished
+        }
 
         const response = await api.updateTop5ListById(store.currentList._id, updatedCurrentList)
         if (response.data.success) {

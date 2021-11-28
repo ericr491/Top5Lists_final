@@ -42,7 +42,7 @@ createTop5ListComment = async (req, res) => {
             console.log('list found')
             top5List.comments.push(newComment._id)
             top5List
-                .save()
+                .save({ timestamps: false })
                 .then(() => {
                     newComment
                         .save()

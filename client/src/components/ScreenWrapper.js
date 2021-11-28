@@ -33,7 +33,7 @@ function ScreenWrapper(props) {
                 delModalToggleVisibility={delModalToggleVisibility} />
             break
         case ActiveViewType.ALL:
-            let idNamePairsALL = store.idNamePairs.filter((pair) => pair.published)
+            let idNamePairsALL = store.idNamePairs.filter((pair) => pair.published && pair.ownerName !== undefined) // will not show the community lists
             if (store.searchBarContents !== "") {
                 idNamePairsALL = idNamePairsALL.filter((pair) => pair.name.toLowerCase().startsWith(store.searchBarContents.toLowerCase()))
             }

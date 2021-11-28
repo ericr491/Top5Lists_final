@@ -382,6 +382,7 @@ function ListCard(props) {
                 </Grid>
 
                 {editActive && expandedViewElements}
+
                 <Grid
                     item
                     container
@@ -389,25 +390,7 @@ function ListCard(props) {
                     direction="column"
                 >
                     <Grid
-                        item
-                        md={3}
                         sx={{ p: 1, flexGrow: 1 }}
-                    >
-                    </Grid>
-                    <Grid
-                        item
-                        md={3}
-                        sx={{ p: 1, flexGrow: 1 }}
-                        style={{
-                        }}
-                    >
-                    </Grid>
-                    <Grid
-                        item
-                        md={3}
-                        sx={{ p: 1, flexGrow: 1 }}
-                        style={{
-                        }}
                     >
                         {editActive && <Typography component={'span'}>{publishedDate}</Typography>}
                     </Grid>
@@ -420,12 +403,6 @@ function ListCard(props) {
                 >
                     <Grid
                         item
-                        sx={{ alignSelf: 'flex-end', flexGrow: 1, mr: 10, mt: 1 }}
-                    >
-                    </Grid>
-                    <Grid
-                        item
-                        md={3}
                         sx={{ p: 1, flexGrow: 1, mr: 10 }}
                         style={{
                             alignSelf: 'flex-end'
@@ -458,8 +435,6 @@ function ListCard(props) {
                     md={1}
                     sx={{ alignItems: 'flex-end' }}
                 >
-                    <Grid item sx={{ p: 0 }}>
-                    </Grid>
                     <Grid item sx={{ p: 0 }}>
                         {
                             editActive && (

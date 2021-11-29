@@ -6,7 +6,7 @@ import List from '@mui/material/List'
     
     @author McKilla Gorilla
 */
-const AllScreen = (props) => {
+const CommunityScreen = (props) => {
     const { idNamePairs, delModalToggleVisibility, toggleVisibility, displayMessage } = props
 
     let listCard = ""
@@ -37,4 +37,4 @@ const AllScreen = (props) => {
         </div>)
 }
 
-export default AllScreen
+export default CommunityScreen

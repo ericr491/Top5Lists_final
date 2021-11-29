@@ -5,10 +5,11 @@ import AllScreen from './AllScreen'
 import UserScreen from './UserScreen'
 import EditToolbar from './EditToolbar'
 import HomeScreen from './HomeScreen'
+import CommunityScreen from './CommunityScreen'
 import Statusbar from './Statusbar'
 
 function ScreenWrapper(props) {
-    const { delModalToggleVisibility } = props
+    const { delModalToggleVisibility, toggleVisibility, displayMessage } = props
 
     const { store } = useContext(GlobalStoreContext)
     const { auth } = useContext(AuthContext)
@@ -30,7 +31,10 @@ function ScreenWrapper(props) {
             }
             view = <HomeScreen
                 idNamePairs={idNamePairsHOME}
-                delModalToggleVisibility={delModalToggleVisibility} />
+                delModalToggleVisibility={delModalToggleVisibility}
+                toggleVisibility={toggleVisibility}
+                displayMessage={displayMessage}
+            />
             break
         case ActiveViewType.ALL:
             let idNamePairsALL = store.idNamePairs.filter((pair) => pair.published && pair.ownerName !== undefined) // will not show the community lists
@@ -39,13 +43,16 @@ function ScreenWrapper(props) {
             }
             view = <AllScreen
                 idNamePairs={idNamePairsALL}
-                delModalToggleVisibility={delModalToggleVisibility} />
+                delModalToggleVisibility={delModalToggleVisibility}
+                toggleVisibility={toggleVisibility}
+                displayMessage={displayMessage}
+            />
             break
         case ActiveViewType.USER:
             let idNamePairsUSER = store.idNamePairs
             if (store.searchBarContents !== "") {
                 idNamePairsUSER = idNamePairsUSER
-                    .filter((pair) => pair.published &&
+                    .filter((pair) => pair.published && pair.ownerName !== undefined &&
                         pair.ownerName.toLowerCase()
                             .startsWith(store.searchBarContents.toLowerCase()))
             } else {
@@ -53,9 +60,18 @@ function ScreenWrapper(props) {
             }
             view = <UserScreen
                 idNamePairs={idNamePairsUSER}
-                delModalToggleVisibility={delModalToggleVisibility} />
+                delModalToggleVisibility={delModalToggleVisibility}
+                toggleVisibility={toggleVisibility}
+                displayMessage={displayMessage}
+            />
             break
         case ActiveViewType.COMMUNITY:
+            view = <CommunityScreen
+                idNamePairs={idNamePairsUSER}
+                delModalToggleVisibility={delModalToggleVisibility}
+                toggleVisibility={toggleVisibility}
+                displayMessage={displayMessage}
+            />
             break
 
         // case ActiveViewType.EDIT:

@@ -35,7 +35,7 @@ export default function RegisterScreen(props) {
     }
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" >
             <CssBaseline />
             <Box
                 sx={{

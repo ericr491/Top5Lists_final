@@ -101,7 +101,7 @@ export default function AppBanner() {
                         <Link style={{ textDecoration: 'none', color: '#D3AC28' }} to='/home/'>T<sup>5</sup>L</Link>
                     </Typography>
                     <Box sx={{ flexGrow: 1 }}></Box>
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{ display: { xs: 'flex', md: 'flex' } }}>
                         <IconButton
                             size="medium"
                             edge="end"

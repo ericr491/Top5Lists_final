@@ -6,11 +6,11 @@ import Box from '@mui/material/Box'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
-import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined'
 import SearchBar from './SearchBar'
 import SortIcon from './SortIcon'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
+import Icon from '@mui/material/Icon'
 
 
 /*
@@ -56,7 +56,7 @@ function EditToolbar() {
                         variant={activeView === ActiveViewType.HOME ? "outlined" : "text"}
                         sx={{ ml: '1em', mr: '1em' }}
                     >
-                        <HomeOutlinedIcon style={{ fill: 'black', fontSize: '30pt' }} />
+                        <HomeOutlinedIcon style={(!auth.loggedIn || isEditMode) ? { fontSize: '30pt' } : { fill: 'black', fontSize: '30pt' }} />
                     </Button>
                     <Button
                         id='all-button'
@@ -81,9 +81,13 @@ function EditToolbar() {
                         onClick={() => handleClick(ActiveViewType.COMMUNITY)}
                         disabled={isEditMode}
                         variant={activeView === ActiveViewType.COMMUNITY ? "outlined" : "text"}
-                        sx={{ ml: '1em', mr: '1em' }}
+                        sx={{
+                            ml: '1em', mr: '1em',
+                        }}
                     >
-                        <SummarizeOutlinedIcon style={{ fill: 'black', fontSize: '30pt' }} />
+                        <div style={{ fontSize: 30, color: 'black' }}>
+                            &#8721;
+                        </div>
                     </Button>
                     <SearchBar
                         textField={textField}

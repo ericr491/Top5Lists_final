@@ -1,18 +1,13 @@
-import React, { useContext, useEffect } from 'react'
-import { GlobalStoreContext } from '../store'
+import React, { useContext } from 'react'
 import ListCard from './ListCard.js'
-import { Typography } from '@mui/material'
 import List from '@mui/material/List'
-import AuthContext from '../auth'
 /*
     This React component lists all the top5 lists in the UI.
     
     @author McKilla Gorilla
 */
 const UserScreen = (props) => {
-    const { auth } = useContext(AuthContext)
-    const { store } = useContext(GlobalStoreContext)
-    const { idNamePairs } = props
+    const { idNamePairs, delModalToggleVisibility, toggleVisibility, displayMessage } = props
 
     let listCard = ""
     if (idNamePairs) {
@@ -24,6 +19,9 @@ const UserScreen = (props) => {
                             <ListCard
                                 key={pair._id}
                                 idNamePair={pair}
+                                toggleVisibility={toggleVisibility}
+                                displayMessage={displayMessage}
+                                delModalToggleVisibility={delModalToggleVisibility}
                             />
                         ))
                 }

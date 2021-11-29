@@ -273,12 +273,123 @@ updateUnimportantTop5List = async (req, res) => {
     // })
 }
 
+// 2 options: combine update + community into one big route
+// or: make two api calls to do them separately
+updateCommunityTop5List = async (req, res) => {
+    const body = req.body
+    const top5ListName = body.name
+    const items = body.items
+
+    if (!body || !top5ListName || !items) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a Top 5 List',
+        })
+    }
+
+    const communityTop5List = await Top5List.findOne({
+        name: new RegExp(`^${top5ListName}$`, 'i'), // list's names need to be case-insensitive 
+        ownerName: { $exists: false }
+    })
+
+    if (communityTop5List) { // found
+        let curItems = communityTop5List.items
+        let curPoints = communityTop5List.points
+
+        items.forEach((item, index) => {
+            let i = curItems.findIndex(curItem => curItem.toLowerCase() === item.toLowerCase())
+            if (i !== -1) {
+                curPoints[i] += (5 - index)
+            } else {
+                curItems.push(item)
+                curPoints.push(5 - index)
+            }
+        })
+
+        let toBeSortedArray = curItems.map((item, index) => ({ itemName: item, points: curPoints[index] }))
+        let sortedArray = toBeSortedArray.sort((objA, objB) => objB.points - objA.points)
+
+
+        communityTop5List.items = sortedArray.map(obj => obj.itemName)
+        communityTop5List.points = sortedArray.map(obj => obj.points)
+        communityTop5List.markModified('points')
+        communityTop5List.save()
+            .then((savedTop5List) => {
+                return res.status(201).json({
+                    success: true,
+                    top5List: savedTop5List,
+                    message: 'Top 5 Community List Created!'
+                })
+            })
+            .catch(error => {
+                return res.status(400).json({
+                    error: error,
+                    message: 'Top 5 Community List Not Created!'
+                })
+            })
+    } else { // not found
+        let newCommunityTop5List = {
+            ...body,
+            points: [5, 4, 3, 2, 1],
+            published: true,
+        }
+
+        delete newCommunityTop5List.userId
+        delete newCommunityTop5List.ownerEmail
+        delete newCommunityTop5List.ownerName
+
+        console.log(newCommunityTop5List)
+        let convertToDoc = new Top5List(newCommunityTop5List)
+        convertToDoc
+            .save()
+            .then(() => {
+                return res.status(201).json({
+                    success: true,
+                    top5List: newCommunityTop5List,
+                    message: 'Top 5 Community List Created!'
+                })
+            })
+            .catch(error => {
+                return res.status(400).json({
+                    error: error,
+                    message: 'Top 5 Community List Not Created!'
+                })
+            })
+    }
+
+}
+
+getCommunityTop5List = async (req, res) => {
+    const body = req.body
+    const listName = body.name
+
+    const communityTop5List = await Top5List.findOne({
+        name: new RegExp(`^${listName}$`, 'i'), // list's names need to be case-insensitive 
+        ownerName: { $exists: false }
+    })
+
+    if (communityTop5List) {
+        return res.status(200).json({
+            success: true,
+            top5List: communityTop5List,
+            message: 'Top 5 Community List Found!'
+        })
+    } else {
+        return res.status(400).json({
+            success: false,
+            message: 'Top 5 Community List Not Found!'
+        })
+    }
+}
+
 module.exports = {
     createTop5List,
     updateTop5List,
     updateUnimportantTop5List,
+    updateCommunityTop5List,
     deleteTop5List,
     getTop5Lists,
     getTop5ListPairs,
-    getTop5ListById
+    getTop5ListById,
+    getCommunityTop5List
 }

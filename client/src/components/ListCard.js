@@ -28,7 +28,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
     @author McKilla Gorilla
 */
 function ListCard(props) {
-    const { idNamePair, delModalToggleVisibility } = props
+    const { idNamePair, delModalToggleVisibility, toggleVisibility, displayMessage } = props
     const { store } = useContext(GlobalStoreContext)
     const { auth } = useContext(AuthContext)
     const [editActive, setEditActive] = useState(false)
@@ -94,7 +94,8 @@ function ListCard(props) {
 
     async function handleLike(event, id) {
         if (!auth.loggedIn) {
-            alert('You must be logged in to like/dislike')
+            displayMessage('You must be logged in to like/dislike')
+            toggleVisibility()
             return
         }
 
@@ -118,7 +119,8 @@ function ListCard(props) {
 
     async function handleDislike(event, id) {
         if (!auth.loggedIn) {
-            alert('You must be logged in to like/dislike')
+            displayMessage('You must be logged in to like/dislike')
+            toggleVisibility()
             return
         }
 
@@ -168,7 +170,8 @@ function ListCard(props) {
             <StaticTop5Item
                 key={`statictop5item${index + 1}`}
                 index={index + 1}
-                content={item} />
+                content={item}
+                votes={undefined} />
         )
         comments = matchingList?.comments.slice(0).reverse().map((comment, index) =>
             <Comment

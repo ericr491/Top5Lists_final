@@ -60,7 +60,10 @@ const App = () => {
                             path="/home/"
                             exact
                             component={() => (
-                                <ScreenWrapper delModalToggleVisibility={delModalToggleVisibility} />)}
+                                <ScreenWrapper
+                                    delModalToggleVisibility={delModalToggleVisibility}
+                                    displayMessage={displayMessage}
+                                    toggleVisibility={toggleVisibility} />)}
                         />
                         <Route
                             path="/register/"

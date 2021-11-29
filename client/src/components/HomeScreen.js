@@ -13,7 +13,7 @@ import WorkspaceScreen from './WorkspaceScreen'
 const HomeScreen = (props) => {
     const { auth } = useContext(AuthContext)
     const { store } = useContext(GlobalStoreContext)
-    const { delModalToggleVisibility, idNamePairs } = props
+    const { delModalToggleVisibility, idNamePairs, toggleVisibility, displayMessage } = props
 
     // function handleCreateNewList() {
     //     store.createNewList()
@@ -45,6 +45,8 @@ const HomeScreen = (props) => {
                                 key={pair._id}
                                 idNamePair={pair}
                                 delModalToggleVisibility={delModalToggleVisibility}
+                                toggleVisibility={toggleVisibility}
+                                displayMessage={displayMessage}
                             />
                         ))
                 }

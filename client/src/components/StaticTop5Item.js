@@ -1,7 +1,7 @@
 import { Typography, ListItem } from '@mui/material'
 
 function StaticTop5Item(props) {
-    const { index, content } = props
+    const { index, content, votes } = props
     if (content) {
         return (
             <ListItem
@@ -11,6 +11,9 @@ function StaticTop5Item(props) {
                 <Typography style={{ marginRight: "3px", fontWeight: "bold", fontSize: '15pt' }} component={'span'} >{index}.</Typography>
                 <Typography style={{ fontWeight: "bold", fontSize: '15pt' }} component={'span'} >
                     {content}
+                </Typography>
+                <Typography>
+                    {votes !== undefined ? votes : ""}
                 </Typography>
             </ListItem>
         )

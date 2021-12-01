@@ -1,13 +1,7 @@
-import { useState, useContext } from 'react'
 import TextField from '@mui/material/TextField'
-import { GlobalStoreContext } from '../store'
-import AuthContext from '../auth'
 
 function SearchBar(props) {
     const { textField, handleKeyPress, handleUpdateText } = props
-
-    const { auth } = useContext(AuthContext)
-    const { store } = useContext(GlobalStoreContext)
 
     const { disabled } = props
 

@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom'
 import { Typography } from '@mui/material'
 
 export default function SplashScreen() {
-
-
     return (
         <div id="splash-screen" style={{ color: 'black', fontWeight: 'bold' }}>
             The Top 5 Lister

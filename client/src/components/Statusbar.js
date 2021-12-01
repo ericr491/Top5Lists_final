@@ -43,13 +43,9 @@ function Statusbar() {
             }
             text += " Lists"
             break
-
         case ActiveViewType.COMMUNITY:
             text = "Community Lists"
             break
-
-        // case ActiveViewType.EDIT:
-        //     break
         default:
             break
     }

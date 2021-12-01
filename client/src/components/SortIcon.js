@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react'
-import AuthContext from '../auth'
 import { GlobalStoreContext, SortByType } from '../store'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -13,7 +12,6 @@ export default function SortIcon(props) {
     const isMenuOpen = Boolean(anchorEl)
     const { disabled } = props
 
-    // let hasBorderClass = "add-a-border"
     let currentSortBy = store.sortBy
 
     let borderStyle = {
@@ -74,7 +72,7 @@ export default function SortIcon(props) {
                 aria-controls={menuId}
                 aria-haspopup="true"
                 onClick={handleProfileMenuOpen}
-                style={{ fill: 'black', fontSize: '50pt' }}
+                style={(disabled) ? { fill: 'gray', fontSize: '50pt' } : { fill: 'black', fontSize: '50pt' }}
             >
             </SortSVGIcon>
             {

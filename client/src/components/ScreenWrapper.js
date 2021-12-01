@@ -54,8 +54,7 @@ function ScreenWrapper(props) {
             if (store.searchBarContents !== "") {
                 idNamePairsUSER = idNamePairsUSER
                     .filter((pair) => pair.published && pair.ownerName !== undefined &&
-                        pair.ownerName.toLowerCase()
-                            .startsWith(store.searchBarContents.toLowerCase()))
+                        pair.ownerName.toLowerCase() === store.searchBarContents.toLowerCase())
             } else {
                 idNamePairsUSER = []
             }

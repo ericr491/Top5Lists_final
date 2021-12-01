@@ -15,14 +15,6 @@ const HomeScreen = (props) => {
     const { store } = useContext(GlobalStoreContext)
     const { delModalToggleVisibility, idNamePairs, toggleVisibility, displayMessage } = props
 
-    // function handleCreateNewList() {
-    //     store.createNewList()
-    // }
-    // let listNameActive = false
-    // if (store && store.isListNameEditActive) {
-    //     listNameActive = true
-    // }
-
     // Redirects them to the ALL View if they are not logged in.
     useEffect(() => {
         if (!auth.loggedIn) {

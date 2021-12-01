@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
 import Top5Item from './Top5Item.js'
 import List from '@mui/material/List'
-import { Typography } from '@mui/material'
 import { GlobalStoreContext } from '../store/index.js'
-import { TextField, Button, Box, Paper } from '@mui/material'
+import { TextField, Button, Box } from '@mui/material'
 /*
     This React component lets us edit a loaded list, which only
     happens when we are on the proper route.
@@ -18,10 +17,6 @@ function WorkspaceScreen(props) {
     const [canSave, setCanSave] = useState(true)
     const [canPublish, setCanPublish] = useState(false)
 
-    // Need to verify that the title is unique
-    // const [userPublishedLists, setUserPublishedLists] = useState(idNamePairs.map(pair => pair.) || [])
-
-
     useEffect(() => {
         if (store.currentList) {
             setItemState([...store.currentList.items])
@@ -31,7 +26,9 @@ function WorkspaceScreen(props) {
 
     useEffect(() => {
         // when itemState is uploaded check if there are empty input fields
-        if (title !== "" && itemState.every(numChars => numChars.length !== 0)
+        if (title.trim() !== "" && itemState.every(numChars => numChars.trim().length !== 0)
+            && itemState.every(numChars => numChars.match(/^[a-zA-Z0-9]/))
+            && title.match(/^[a-zA-Z0-9]/)
             && itemState.length === (new Set(itemState)).size // no dupes!
             && !publishedNames.find(pubName => pubName.toLowerCase() === title.toLowerCase())) {
             setCanPublish(true)
@@ -79,9 +76,7 @@ function WorkspaceScreen(props) {
         return <></>
     }
     return (
-        // <div id="top5-workspace">
         <Box
-            // id='list-selector-list'
             sx={{
                 backgroundColor: '#D4D4F5',
                 border: '2px black solid',
@@ -102,7 +97,6 @@ function WorkspaceScreen(props) {
                 inputProps={{ style: { fontSize: 16, padding: 1 } }}
                 sx={{
                     backgroundColor: "white",
-                    // zIndex: '100',
                     width: "50%",
                     marginTop: 1,
                     marginLeft: 2,
@@ -119,16 +113,6 @@ function WorkspaceScreen(props) {
             >
                 {editItems}
             </Box>
-            {/* <div >
-                    <div >
-                        <div className="item-number"><Typography variant="h5">1.</Typography></div>
-                        <div className="item-number"><Typography variant="h5">2.</Typography></div>
-                        <div className="item-number"><Typography variant="h5">3.</Typography></div>
-                        <div className="item-number"><Typography variant="h5">4.</Typography></div>
-                        <div className="item-number"><Typography variant="h5">5.</Typography></div>
-                    </div>
-                    {editItems}
-                </div> */}
             <Button
                 variant="contained"
                 onClick={handlePublished}
@@ -163,8 +147,6 @@ function WorkspaceScreen(props) {
                 Save
             </Button>
         </Box>
-
-        /* </div> */
     )
 }
 

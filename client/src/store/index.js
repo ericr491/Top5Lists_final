@@ -150,24 +150,6 @@ function GlobalStoreContextProvider(props) {
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
             case GlobalStoreActionType.LOAD_ID_NAME_PAIRS: {
                 let pairsArray = sortIdNamePairs(payload, store.sortBy)
-                // switch (store.sortBy) {
-                //     case SortByType.OLD:
-                //         pairsArray = pairsArray.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
-                //         break
-                //     case SortByType.MOST_VIEWS:
-                //         pairsArray = pairsArray.sort((a, b) => b.views - a.views)
-                //         break
-                //     case SortByType.MOST_LIKES:
-                //         pairsArray = pairsArray.sort((a, b) => b.likes.length - a.likes.length)
-                //         break
-                //     case SortByType.MOST_DISLIKES:
-                //         pairsArray = pairsArray.sort((a, b) => b.dislikes.length - a.dislikes.length)
-                //         break
-                //     case SortByType.NEW: // Newest is first
-                //     default:
-                //         pairsArray = pairsArray.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate))
-                //         break
-                // }
                 return setStore({
                     idNamePairs: pairsArray,
                     idItemsComments: store.idItemsComments,
@@ -245,7 +227,7 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     activeView: store.activeView,
                     sortBy: store.sortBy,
-                    searchBarContents: "",
+                    searchBarContents: store.searchBarContents,
                 })
             }
             default:
@@ -383,7 +365,9 @@ function GlobalStoreContextProvider(props) {
     store.deleteList = async function (listToDelete) {
         let response = await api.deleteTop5ListById(listToDelete._id)
         if (response.data.success) {
-            await api.deleteTop5CommunityList(response.data.data)
+            if (listToDelete.published) {
+                await api.deleteTop5CommunityList(response.data.data)
+            }
             store.loadIdNamePairs()
             // history.push("/home/")
         }

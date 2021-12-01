@@ -36,8 +36,8 @@ function AuthContextProvider(props) {
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
-                    user: payload.user,
-                    loggedIn: true
+                    user: null,
+                    loggedIn: false
                 })
             }
             case AuthActionType.LOGOUT_USER: {

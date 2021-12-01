@@ -10,7 +10,6 @@ import SearchBar from './SearchBar'
 import SortIcon from './SortIcon'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import Icon from '@mui/material/Icon'
 
 
 /*
@@ -65,7 +64,7 @@ function EditToolbar() {
                         variant={activeView === ActiveViewType.ALL ? "outlined" : "text"}
                         sx={{ ml: '1em', mr: '1em' }}
                     >
-                        <GroupOutlinedIcon style={{ fill: 'black', fontSize: '30pt' }} />
+                        <GroupOutlinedIcon style={(isEditMode) ? { fontSize: '30pt' } : { fill: 'black', fontSize: '30pt' }} />
                     </Button>
                     <Button
                         id='user-button'
@@ -74,7 +73,7 @@ function EditToolbar() {
                         variant={activeView === ActiveViewType.USER ? "outlined" : "text"}
                         sx={{ ml: '1em', mr: '1em' }}
                     >
-                        <PersonOutlinedIcon style={{ fill: 'black', fontSize: '30pt' }} />
+                        <PersonOutlinedIcon style={(isEditMode) ? { fontSize: '30pt' } : { fill: 'black', fontSize: '30pt' }} />
                     </Button>
                     <Button
                         id='community-button'
@@ -85,7 +84,7 @@ function EditToolbar() {
                             ml: '1em', mr: '1em',
                         }}
                     >
-                        <div style={{ fontSize: 30, color: 'black' }}>
+                        <div style={(isEditMode) ? { fontSize: 30, color: 'gray' } : { fontSize: 30, color: 'black' }}>
                             &#8721;
                         </div>
                     </Button>

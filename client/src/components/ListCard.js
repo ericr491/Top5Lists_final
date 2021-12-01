@@ -59,9 +59,6 @@ function ListCard(props) {
             }
             await store.updateViewsCount(newList._id, newList)
         }
-        // else {
-        //     await store.updateItemsAndComments(idNamePair._id)
-        // }
         toggleEdit()
     }
 
@@ -166,14 +163,29 @@ function ListCard(props) {
     if (editActive) {
         const matchingList = store.idItemsComments
             .find(doc => doc._id === idNamePair._id)
-        items = matchingList?.items.map((item, index) =>
-            <StaticTop5Item
-                key={`statictop5item${index + 1}`}
-                index={index + 1}
-                content={item}
-                votes={store.activeView !== "COMMUNITY" ? undefined :
-                    (idNamePair.points ? idNamePair.points[index] : undefined)} />
-        )
+
+        if (matchingList) {
+            if (matchingList.items.length === 0) {
+                items = ['', '', '', '', ''].map((item, index) =>
+                    <StaticTop5Item
+                        key={`statictop5item${index + 1}`}
+                        index={index + 1}
+                        content={item}
+                        votes={store.activeView !== "COMMUNITY" ? undefined :
+                            (idNamePair.points ? idNamePair.points[index] : undefined)} />
+                )
+            } else {
+                items = matchingList?.items.map((item, index) =>
+                    <StaticTop5Item
+                        key={`statictop5item${index + 1}`}
+                        index={index + 1}
+                        content={item}
+                        votes={store.activeView !== "COMMUNITY" ? undefined :
+                            (idNamePair.points ? idNamePair.points[index] : undefined)} />
+                )
+            }
+        }
+
         comments = matchingList?.comments.slice(0).reverse().map((comment, index) =>
             <Comment
                 key={`top5comment${index + 1}`}

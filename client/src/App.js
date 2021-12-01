@@ -5,9 +5,7 @@ import { AuthContextProvider } from './auth'
 import { GlobalStoreContextProvider } from './store'
 import {
     AppBanner,
-    HomeWrapper,
     RegisterScreen,
-    Statusbar,
     WorkspaceScreen,
     LoginScreen,
     ErrorModal,

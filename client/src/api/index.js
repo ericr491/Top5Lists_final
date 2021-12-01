@@ -37,6 +37,12 @@ export const logoutUser = () => api.get(`/logout/`)
 
 export const postComment = (payload) => api.post(`/top5listcomment/`, payload)
 
+export const updateTop5CommunityList = (payload) => {
+    let { _id, ...updatedPayload } = payload
+    return api.post(`/top5listcommunity/`, updatedPayload)
+}
+export const deleteTop5CommunityList = (payload) => api.post(`/top5listdeletecommunity/`, payload)
+
 const apis = {
     createTop5List,
     getAllTop5Lists,
@@ -51,7 +57,10 @@ const apis = {
     loginUser,
     logoutUser,
 
-    postComment
+    postComment,
+
+    updateTop5CommunityList,
+    deleteTop5CommunityList,
 }
 
 export default apis

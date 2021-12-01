@@ -138,11 +138,21 @@ registerUser = async (req, res) => {
         // LOGIN THE USER
         const token = auth.signToken(savedUser)
 
-        await res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none"
-        }).status(200).json({
+        // await res.cookie("token", token, {
+        //     httpOnly: true,
+        //     secure: true,
+        //     sameSite: "none"
+        // }).status(200).json({
+        //     success: true,
+        //     user: {
+        //         firstName: savedUser.firstName,
+        //         lastName: savedUser.lastName,
+        //         email: savedUser.email,
+        //         username: savedUser.username,
+        //     }
+        // }).send()
+
+        await res.status(200).json({
             success: true,
             user: {
                 firstName: savedUser.firstName,
@@ -150,7 +160,7 @@ registerUser = async (req, res) => {
                 email: savedUser.email,
                 username: savedUser.username,
             }
-        }).send()
+        })
     } catch (err) {
         console.error(err)
         res.status(500).send()

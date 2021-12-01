@@ -20,5 +20,6 @@ router.post('/login', UserController.loginUser)
 
 router.post('/top5listcomment', auth.verify, CommentController.createTop5ListComment)
 router.post('/top5listcommunity', auth.verify, Top5ListController.updateCommunityTop5List)
+router.post('/top5listdeletecommunity', auth.verify, Top5ListController.deleteCommunityTop5List)
 router.get('/top5listcommunity', Top5ListController.getCommunityTop5List)
 module.exports = router

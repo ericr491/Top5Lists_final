@@ -383,6 +383,7 @@ function GlobalStoreContextProvider(props) {
     store.deleteList = async function (listToDelete) {
         let response = await api.deleteTop5ListById(listToDelete._id)
         if (response.data.success) {
+            await api.deleteTop5CommunityList(response.data.data)
             store.loadIdNamePairs()
             // history.push("/home/")
         }
@@ -429,6 +430,14 @@ function GlobalStoreContextProvider(props) {
 
         const response = await api.updateTop5ListById(store.currentList._id, updatedCurrentList)
         if (response.data.success) {
+            if (isPublished) {
+                const res = await api.updateTop5CommunityList(updatedCurrentList)
+                if (res.data.success) {
+                    console.log('Updated community list.')
+                } else {
+                    console.log('Failed to update community list.')
+                }
+            }
             const response = await api.getTop5ListPairs()
             if (response.data.success) {
                 let pairsArray = response.data.idNamePairs
@@ -514,12 +523,6 @@ function GlobalStoreContextProvider(props) {
             payload: { sortType, pairsArray }
         })
     }
-
-    // store.logout = function () {
-    //     storeReducer({
-
-    //     })
-    // }
 
     return (
         <GlobalStoreContext.Provider value={{

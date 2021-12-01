@@ -31,7 +31,9 @@ function WorkspaceScreen(props) {
 
     useEffect(() => {
         // when itemState is uploaded check if there are empty input fields
-        if (title !== "" && itemState.every(numChars => numChars.length !== 0) && !publishedNames.includes(title)) {
+        if (title !== "" && itemState.every(numChars => numChars.length !== 0)
+            && itemState.length === (new Set(itemState)).size // no dupes!
+            && !publishedNames.find(pubName => pubName.toLowerCase() === title.toLowerCase())) {
             setCanPublish(true)
         } else {
             setCanPublish(false)

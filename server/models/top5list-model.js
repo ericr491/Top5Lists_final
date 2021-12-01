@@ -5,7 +5,7 @@ const Top5ListSchema = new Schema(
     {
         name: { type: String, required: true },
         items: { type: [String], required: true },
-        points: { type: [Schema.Types.Number] }, // one-to-one mapping with the index of items
+        points: [{ type: Schema.Types.Number }], // one-to-one mapping with the index of items
         userId: { type: Schema.Types.ObjectId },
         ownerEmail: { type: String },
         ownerName: { type: String },

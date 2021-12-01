@@ -39,7 +39,8 @@ function ScreenWrapper(props) {
         case ActiveViewType.ALL:
             let idNamePairsALL = store.idNamePairs.filter((pair) => pair.published && pair.ownerName !== undefined) // will not show the community lists
             if (store.searchBarContents !== "") {
-                idNamePairsALL = idNamePairsALL.filter((pair) => pair.name.toLowerCase().startsWith(store.searchBarContents.toLowerCase()))
+                idNamePairsALL = idNamePairsALL
+                    .filter((pair) => pair.name.toLowerCase().startsWith(store.searchBarContents.toLowerCase()))
             }
             view = <AllScreen
                 idNamePairs={idNamePairsALL}
@@ -66,17 +67,18 @@ function ScreenWrapper(props) {
             />
             break
         case ActiveViewType.COMMUNITY:
+            let idNamePairsCOMMUNITY = store.idNamePairs.filter((pair) => pair.ownerName === undefined)
+            if (store.searchBarContents !== "") {
+                idNamePairsCOMMUNITY = idNamePairsCOMMUNITY
+                    .filter((pair) => pair.name.toLowerCase().startsWith(store.searchBarContents.toLowerCase()))
+            }
             view = <CommunityScreen
-                idNamePairs={idNamePairsUSER}
+                idNamePairs={idNamePairsCOMMUNITY}
                 delModalToggleVisibility={delModalToggleVisibility}
                 toggleVisibility={toggleVisibility}
                 displayMessage={displayMessage}
             />
             break
-
-        // case ActiveViewType.EDIT:
-        //     break
-
         default:
             view = <></>
             break

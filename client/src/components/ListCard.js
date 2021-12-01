@@ -171,7 +171,8 @@ function ListCard(props) {
                 key={`statictop5item${index + 1}`}
                 index={index + 1}
                 content={item}
-                votes={undefined} />
+                votes={store.activeView !== "COMMUNITY" ? undefined :
+                    (idNamePair.points ? idNamePair.points[index] : undefined)} />
         )
         comments = matchingList?.comments.slice(0).reverse().map((comment, index) =>
             <Comment
@@ -299,10 +300,15 @@ function ListCard(props) {
                         style={{
                         }}
                     >
-                        <Typography component={'span'} style={{ color: "blue" }}>
-                            <span style={{ color: 'black' }}>By: </span>
-                            <span style={{ textDecoration: 'underline' }}>{idNamePair.ownerName}</span>
-                        </Typography>
+                        {store.activeView !== 'COMMUNITY' ?
+                            (<Typography component={'span'} style={{ color: "blue" }}>
+                                <span style={{ color: 'black' }}>By: </span>
+                                <span style={{ textDecoration: 'underline' }}>{idNamePair.ownerName}</span>
+                            </Typography>) :
+                            (<Typography component={'span'} style={{ color: "blue" }}>
+                                <span style={{ color: 'transparent' }}>&nbsp;</span>
+                            </Typography>)
+                        }
                     </Grid>
                     <Grid
                         item

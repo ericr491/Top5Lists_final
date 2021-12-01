@@ -122,28 +122,27 @@ deleteTop5List = async (req, res) => {
             })
         }
 
-        Top5List.findOneAndDelete({ _id: req.params.id }, () => {
-            return res.status(200).json({ success: true, data: top5List })
+        User.findById(req.userId, (err, user) => {
+            if (err) {
+                return res.status(404).json({
+                    err,
+                    message: 'User not found!',
+                })
+            }
+
+            user.top5Lists = user.top5Lists.filter(mongoID => mongoID.toString() !== req.params.id)
+
+            user.save(() => {
+                console.log('LIST DELETED FROM USER')
+                Top5List.findOneAndDelete({ _id: req.params.id }, () => {
+                    return res.status(200).json({ success: true, data: top5List })
+                })
+            })
         }).catch(err => console.log(err))
     })
 }
 
 getTop5ListById = async (req, res) => {
-    // await Top5List.findById({ _id: req.params.id }, (err, list) => {
-    //     if (err) {
-    //         return res.status(400).json({ success: false, error: err })
-    //     }
-
-    //     if (!req.userId || (req.userId !== list.userId.toString())) {
-    //         return res.status(401).json({
-    //             success: false,
-    //             message: 'User is not authorize to view this list.',
-    //         })
-    //     }
-
-    //     return res.status(200).json({ success: true, top5List: list })
-    // }).catch(err => console.log(err))
-
     await Top5List
         .findById({ _id: req.params.id })
         .populate('comments')
@@ -241,42 +240,8 @@ updateUnimportantTop5List = async (req, res) => {
                 message: 'Top 5 List updated!',
             })
         })
-
-
-    // Top5List.findOne({ _id: req.params.id }, (err, top5List) => {
-    //     console.log("top5List found: " + JSON.stringify(top5List))
-    //     if (err) {
-    //         return res.status(404).json({
-    //             err,
-    //             message: 'Top 5 List not found!',
-    //         })
-    //     }
-
-    //     top5List.likes = body.likes
-    //     top5List.dislikes = body.dislikes
-    //     top5List.views = body.views
-    //     top5List
-    //         .save()
-    //         .then(() => {
-    //             console.log("SUCCESS!!!")
-    //             return res.status(200).json({
-    //                 success: true,
-    //                 id: top5List._id,
-    //                 message: 'Top 5 List updated!',
-    //             })
-    //         })
-    //         .catch(error => {
-    //             console.log("FAILURE: " + JSON.stringify(error))
-    //             return res.status(404).json({
-    //                 error,
-    //                 message: 'Top 5 List not updated!',
-    //             })
-    //         })
-    // })
 }
 
-// 2 options: combine update + community into one big route
-// or: make two api calls to do them separately
 updateCommunityTop5List = async (req, res) => {
     const body = req.body
     const top5ListName = body.name

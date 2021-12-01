@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const Top5ListSchema = new Schema(
     {
-        name: { type: String, required: true },
+        name: { type: String, required: emptyStringAllowed },
         items: { type: [String], required: true },
         points: [{ type: Schema.Types.Number }], // one-to-one mapping with the index of items
         userId: { type: Schema.Types.ObjectId },
@@ -18,5 +18,9 @@ const Top5ListSchema = new Schema(
     },
     { timestamps: true },
 )
+
+function emptyStringAllowed() {
+    return typeof this.name !== 'string'
+}
 
 module.exports = mongoose.model('Top5List', Top5ListSchema)

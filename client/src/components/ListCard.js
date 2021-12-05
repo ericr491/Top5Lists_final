@@ -53,11 +53,19 @@ function ListCard(props) {
         event.stopPropagation()
         if (!editActive) {
             const fullList = await api.getTop5ListById(idNamePair._id)
-            const newList = {
-                ...fullList.data.top5List,
-                views: fullList.data.top5List.views + 1
+            if (idNamePair.published) {
+                const newList = {
+                    ...fullList.data.top5List,
+                    views: fullList.data.top5List.views + 1
+                }
+                await store.updateViewsCount(newList._id, newList)
+            } else {
+                const newList = {
+                    ...fullList.data.top5List,
+                    views: fullList.data.top5List.views + 0
+                }
+                await store.updateViewsCount(newList._id, newList)
             }
-            await store.updateViewsCount(newList._id, newList)
         }
         toggleEdit()
     }
@@ -148,7 +156,7 @@ function ListCard(props) {
             <Box
                 style={{ color: "green" }}
             >
-                <span style={{ color: 'black' }}>Published: </span>
+                <span style={{ color: 'black' }}>{store.activeView === "COMMUNITY" ? 'Updated:' : 'Published:'} </span>
                 <span style={{ textDecoration: 'none' }}>{date}</span>
             </Box>
         )
@@ -204,30 +212,34 @@ function ListCard(props) {
             inputProps={{ style: { fontSize: 16, padding: 8 } }}
             sx={{ backgroundColor: "white", marginRight: 10, width: '95%' }}
             value={text}
-            disabled={!auth.loggedIn}
+            disabled={!auth.loggedIn || !idNamePair.published}
         />
     }
 
     let likeButton = undefined
     let dislikeButton = undefined
-    if (liked) {
-        likeButton = <Typography component={'span'}>
-            <ThumbUpIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleLike(event, idNamePair._id)} />
-            {idNamePair.likes.length}</Typography>
-    } else {
-        likeButton = <Typography component={'span'}>
-            <ThumbUpOutlinedIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleLike(event, idNamePair._id)} />
-            {idNamePair.likes.length}</Typography>
+
+    if (idNamePair.published) {
+        if (liked) {
+            likeButton = <Typography component={'span'}>
+                <ThumbUpIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleLike(event, idNamePair._id)} />
+                {idNamePair.likes.length}</Typography>
+        } else {
+            likeButton = <Typography component={'span'}>
+                <ThumbUpOutlinedIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleLike(event, idNamePair._id)} />
+                {idNamePair.likes.length}</Typography>
+        }
+        if (disliked) {
+            dislikeButton = <Typography component={'span'}>
+                <ThumbDownIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleDislike(event, idNamePair._id)} />
+                {idNamePair.dislikes.length}</Typography>
+        } else {
+            dislikeButton = <Typography component={'span'}>
+                <ThumbDownOutlinedIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleDislike(event, idNamePair._id)} />
+                {idNamePair.dislikes.length}</Typography>
+        }
     }
-    if (disliked) {
-        dislikeButton = <Typography component={'span'}>
-            <ThumbDownIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleDislike(event, idNamePair._id)} />
-            {idNamePair.dislikes.length}</Typography>
-    } else {
-        dislikeButton = <Typography component={'span'}>
-            <ThumbDownOutlinedIcon sx={{ fontSize: '30pt' }} onClick={(event) => handleDislike(event, idNamePair._id)} />
-            {idNamePair.dislikes.length}</Typography>
-    }
+
 
     let expandedViewElements = <Grid
         container
@@ -353,7 +365,7 @@ function ListCard(props) {
                             alignSelf: 'flex-end'
                         }}
                     >
-                        {!editActive && (
+                        {(!editActive) && (
                             <Typography
                                 component={'span'}
                                 style={{
@@ -429,7 +441,7 @@ function ListCard(props) {
                             alignSelf: 'flex-end'
                         }}
                     >
-                        {editActive && (
+                        {(editActive) && (
                             <Typography
                                 component={'span'}
                                 style={{

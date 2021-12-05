@@ -1,0 +1,52 @@
+[{
+  "_id": {
+    "$oid": "61aa6928b43f034e1861bb8e"
+  },
+  "top5Lists": [
+    {
+      "$oid": "61aa6935b43f034e1861bb93"
+    },
+    {
+      "$oid": "61aa698ab43f034e1861bb9e"
+    },
+    {
+      "$oid": "61aa6a1ab43f034e1861bbb3"
+    }
+  ],
+  "firstName": "Joe",
+  "lastName": "Shmo",
+  "email": "joe@shmo.com",
+  "passwordHash": "$2a$10$0jSkAN2Nxtl5DnonSIq1W.6hv31Buki5kVG5KXHpirUX9JhcRcKhK",
+  "username": "Joe Shmo",
+  "createdAt": {
+    "$date": "2021-12-03T18:59:52.429Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:03:54.508Z"
+  },
+  "__v": 3
+},{
+  "_id": {
+    "$oid": "61aa6d02b43f034e1861bbdd"
+  },
+  "top5Lists": [
+    {
+      "$oid": "61aa6d0ab43f034e1861bbe2"
+    },
+    {
+      "$oid": "61aa6d40b43f034e1861bbf0"
+    }
+  ],
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane@doe.com",
+  "passwordHash": "$2a$10$Gt/gteo3Z2Oh9mdRA9nBMu9kwM4H2t9QEI739y/3BZ3I758E0FVza",
+  "username": "Jane Doe",
+  "createdAt": {
+    "$date": "2021-12-03T19:16:18.916Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:17:20.566Z"
+  },
+  "__v": 2
+}]

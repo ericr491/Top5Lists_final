@@ -27,8 +27,13 @@ function ScreenWrapper(props) {
         case ActiveViewType.EDIT:
             let idNamePairsHOME = store.idNamePairs.filter((pair) => pair.ownerName === auth.user?.username)
             if (store.searchBarContents !== "") {
-                idNamePairsHOME = idNamePairsHOME.filter((pair) => pair.name.toLowerCase().startsWith(store.searchBarContents.toLowerCase()))
+                idNamePairsHOME = idNamePairsHOME.filter((pair) => pair.name.toLowerCase().startsWith(store.searchBarContents.toLowerCase().trim()))
             }
+            idNamePairsHOME = idNamePairsHOME.sort((a, b) => {
+                let aPublished = a.published ? 1 : 0
+                let bPublished = b.published ? 1 : 0
+                return bPublished - aPublished
+            })
             view = <HomeScreen
                 idNamePairs={idNamePairsHOME}
                 delModalToggleVisibility={delModalToggleVisibility}
@@ -40,7 +45,7 @@ function ScreenWrapper(props) {
             let idNamePairsALL = store.idNamePairs.filter((pair) => pair.published && pair.ownerName !== undefined) // will not show the community lists
             if (store.searchBarContents !== "") {
                 idNamePairsALL = idNamePairsALL
-                    .filter((pair) => pair.name.toLowerCase().startsWith(store.searchBarContents.toLowerCase()))
+                    .filter((pair) => pair.name.toLowerCase() === store.searchBarContents.toLowerCase().trim())
             }
             view = <AllScreen
                 idNamePairs={idNamePairsALL}
@@ -69,7 +74,7 @@ function ScreenWrapper(props) {
             let idNamePairsCOMMUNITY = store.idNamePairs.filter((pair) => pair.ownerName === undefined)
             if (store.searchBarContents !== "") {
                 idNamePairsCOMMUNITY = idNamePairsCOMMUNITY
-                    .filter((pair) => pair.name.toLowerCase().startsWith(store.searchBarContents.toLowerCase()))
+                    .filter((pair) => pair.name.toLowerCase() === store.searchBarContents.toLowerCase().trim())
             }
             view = <CommunityScreen
                 idNamePairs={idNamePairsCOMMUNITY}

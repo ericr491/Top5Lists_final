@@ -407,8 +407,8 @@ function GlobalStoreContextProvider(props) {
     store.updateCurrentList = async function (newTitle, newItems, isPublished = false) {
         let updatedCurrentList = {
             ...store.currentList,
-            name: newTitle,
-            items: [...newItems],
+            name: newTitle.trim(),
+            items: newItems.map(item => item.trim()),
             published: isPublished
         }
 

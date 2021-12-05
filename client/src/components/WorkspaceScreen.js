@@ -29,8 +29,8 @@ function WorkspaceScreen(props) {
         if (title.trim() !== "" && itemState.every(numChars => numChars.trim().length !== 0)
             && itemState.every(numChars => numChars.match(/^[a-zA-Z0-9]/))
             && title.match(/^[a-zA-Z0-9]/)
-            && itemState.length === (new Set(itemState)).size // no dupes!
-            && !publishedNames.find(pubName => pubName.toLowerCase() === title.toLowerCase())) {
+            && itemState.length === (new Set(itemState.map(lstItem => lstItem.trim().toLowerCase()))).size // no dupes!
+            && !publishedNames.find(pubName => pubName.trim().toLowerCase() === title.trim().toLowerCase())) {
             setCanPublish(true)
         } else {
             setCanPublish(false)

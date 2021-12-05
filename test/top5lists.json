@@ -1,0 +1,320 @@
+[{
+  "_id": {
+    "$oid": "61aa6935b43f034e1861bb93"
+  },
+  "items": [
+    "Disco Elysium",
+    "Tetris Effect",
+    "Hades",
+    "FORZA HORIZON 5",
+    "PSYCHONAUTS 2"
+  ],
+  "points": [],
+  "likes": [],
+  "dislikes": [
+    "Joe Shmo"
+  ],
+  "comments": [],
+  "name": "Games",
+  "ownerEmail": "joe@shmo.com",
+  "ownerName": "Joe Shmo",
+  "views": 0,
+  "published": true,
+  "userId": {
+    "$oid": "61aa6928b43f034e1861bb8e"
+  },
+  "createdAt": {
+    "$date": "2021-12-03T19:00:05.477Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:01:25.097Z"
+  },
+  "__v": 1
+},{
+  "_id": {
+    "$oid": "61aa6985b43f034e1861bb9a"
+  },
+  "items": [
+    "Disco Elysium",
+    "Tetris Effect",
+    "Hades",
+    "FORZA HORIZON 5",
+    "PSYCHONAUTS 2"
+  ],
+  "points": [
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "likes": [],
+  "dislikes": [
+    "Jane Doe"
+  ],
+  "comments": [
+    {
+      "$oid": "61aa6f02b43f034e1861bc62"
+    }
+  ],
+  "name": "Games",
+  "views": 2,
+  "published": true,
+  "createdAt": {
+    "$date": "2021-12-03T19:00:05.477Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:00:05.477Z"
+  },
+  "__v": 1
+},{
+  "_id": {
+    "$oid": "61aa698ab43f034e1861bb9e"
+  },
+  "items": [
+    "Mario",
+    "Zelda",
+    "Metroid",
+    "Smash Bros",
+    "Pokemon"
+  ],
+  "points": [],
+  "likes": [],
+  "dislikes": [
+    "Joe Shmo"
+  ],
+  "comments": [],
+  "name": "Games By Nintendo",
+  "ownerEmail": "joe@shmo.com",
+  "ownerName": "Joe Shmo",
+  "views": 0,
+  "published": true,
+  "userId": {
+    "$oid": "61aa6928b43f034e1861bb8e"
+  },
+  "createdAt": {
+    "$date": "2021-12-03T19:01:30.936Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:02:40.200Z"
+  },
+  "__v": 1
+},{
+  "_id": {
+    "$oid": "61aa69d0b43f034e1861bbaf"
+  },
+  "items": [
+    "Mario",
+    "Zelda",
+    "Metroid",
+    "Smash Bros",
+    "Pokemon"
+  ],
+  "points": [
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "likes": [
+    "Jane Doe"
+  ],
+  "dislikes": [
+    "Joe Shmo"
+  ],
+  "comments": [
+    {
+      "$oid": "61aa6e7fb43f034e1861bc18"
+    }
+  ],
+  "name": "Games By Nintendo",
+  "views": 4,
+  "published": true,
+  "createdAt": {
+    "$date": "2021-12-03T19:01:30.936Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:01:30.936Z"
+  },
+  "__v": 1
+},{
+  "_id": {
+    "$oid": "61aa6a1ab43f034e1861bbb3"
+  },
+  "items": [
+    "demon's souls",
+    "astro's playroom",
+    "returnal",
+    "ratchet & clank: rift apart",
+    "death stranding"
+  ],
+  "points": [],
+  "likes": [],
+  "dislikes": [
+    "Joe Shmo"
+  ],
+  "comments": [],
+  "name": "Games on PS5",
+  "ownerEmail": "joe@shmo.com",
+  "ownerName": "Joe Shmo",
+  "views": 0,
+  "published": true,
+  "userId": {
+    "$oid": "61aa6928b43f034e1861bb8e"
+  },
+  "createdAt": {
+    "$date": "2021-12-03T19:03:54.512Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:15:41.290Z"
+  },
+  "__v": 1
+},{
+  "_id": {
+    "$oid": "61aa6cddb43f034e1861bbd7"
+  },
+  "items": [
+    "demon's souls",
+    "astro's playroom",
+    "returnal",
+    "ratchet & clank: rift apart",
+    "death stranding"
+  ],
+  "points": [
+    10,
+    8,
+    6,
+    4,
+    2
+  ],
+  "likes": [
+    "Jane Doe",
+    "Joe Shmo"
+  ],
+  "dislikes": [],
+  "comments": [
+    {
+      "$oid": "61aa6edbb43f034e1861bc48"
+    },
+    {
+      "$oid": "61aa6f10b43f034e1861bc69"
+    }
+  ],
+  "name": "Games on PS5",
+  "views": 5,
+  "published": true,
+  "createdAt": {
+    "$date": "2021-12-03T19:03:54.512Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:16:53.206Z"
+  },
+  "__v": 3
+},{
+  "_id": {
+    "$oid": "61aa6d0ab43f034e1861bbe2"
+  },
+  "items": [
+    "Demon's Souls",
+    "Astro's Playroom",
+    "Returnal",
+    "Ratchet & Clank: Rift Apart",
+    "Death Stranding"
+  ],
+  "points": [],
+  "likes": [],
+  "dislikes": [],
+  "comments": [],
+  "name": "Games on PS5",
+  "ownerEmail": "jane@doe.com",
+  "ownerName": "Jane Doe",
+  "views": 0,
+  "published": true,
+  "userId": {
+    "$oid": "61aa6d02b43f034e1861bbdd"
+  },
+  "createdAt": {
+    "$date": "2021-12-03T19:16:26.924Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:16:53.192Z"
+  },
+  "__v": 1
+},{
+  "_id": {
+    "$oid": "61aa6d40b43f034e1861bbf0"
+  },
+  "items": [
+    "Breaking Bad",
+    "Walking Dead",
+    "Sherlock",
+    "Arcane",
+    "Squid Game"
+  ],
+  "points": [],
+  "likes": [
+    "Joe Shmo"
+  ],
+  "dislikes": [],
+  "comments": [],
+  "name": "TV",
+  "ownerEmail": "jane@doe.com",
+  "ownerName": "Jane Doe",
+  "views": 0,
+  "published": true,
+  "userId": {
+    "$oid": "61aa6d02b43f034e1861bbdd"
+  },
+  "createdAt": {
+    "$date": "2021-12-03T19:17:20.568Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:21:08.926Z"
+  },
+  "__v": 1
+},{
+  "_id": {
+    "$oid": "61aa6e24b43f034e1861bbf7"
+  },
+  "items": [
+    "Breaking Bad",
+    "Walking Dead",
+    "Sherlock",
+    "Arcane",
+    "Squid Game"
+  ],
+  "points": [
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "likes": [
+    "Jane Doe",
+    "Joe Shmo"
+  ],
+  "dislikes": [],
+  "comments": [
+    {
+      "$oid": "61aa6e8db43f034e1861bc1f"
+    },
+    {
+      "$oid": "61aa6f1eb43f034e1861bc70"
+    },
+    {
+      "$oid": "61aa6f57b43f034e1861bc90"
+    }
+  ],
+  "name": "TV",
+  "views": 6,
+  "published": true,
+  "createdAt": {
+    "$date": "2021-12-03T19:17:20.568Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-03T19:17:20.568Z"
+  },
+  "__v": 3
+}]

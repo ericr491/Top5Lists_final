@@ -13,7 +13,7 @@ const AllScreen = (props) => {
     let listCard = ""
     if (idNamePairs) {
         listCard =
-            <List sx={{ width: '90%', left: '5%', bgcolor: '#E6E6E6' }}>
+            <List sx={{ width: '90%', left: '5%', bgcolor: '#AAAAAA' }}>
                 {
                     idNamePairs
                         .map((pair) => (

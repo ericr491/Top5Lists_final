@@ -7,7 +7,7 @@
         @author McKilla Gorilla
     */
   --swatch-foundation: #eeeedd;
-  --swatch-primary: #e6e6e6;
+  --swatch-primary: #aaaaaa;
   --swatch-complement: #e1e4cb;
   --swatch-contrast: #111111;
   --swatch-accent: #669966;
@@ -120,7 +120,7 @@ body {
   top: 90%;
   width: 100%;
   height: 10%;
-  background-color: #c4c4c4;
+  background-color: var(--swatch-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,8 +153,9 @@ body {
   /* height: 90%; */
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow-y: scroll;
   max-height: 470px;
+  overflow-x: none;
 }
 
 .list-card,

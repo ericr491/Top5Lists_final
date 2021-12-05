@@ -46,7 +46,7 @@ function EditToolbar() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" elevation={0} style={{ backgroundColor: "#E0E0E0" }}>
+            <AppBar position="static" elevation={0} style={{ backgroundColor: "#AAAAAA" }}>
                 <Toolbar>
                     <Button
                         id='home-button'

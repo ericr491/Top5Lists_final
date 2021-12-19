@@ -17,3 +17,6 @@ https://github.com/ericr491/Top5Lists_HW4
   * This whole process is called mounting
   * After the actual DOM changes it will call componentDidMount or useEffect
 * useEffect always runs after render(), whether first mount or update
+* Changing of props and using setState will cause a re-render
+* Profiler under the React Components extension will let you know if unneeded rerendering is occurring, so if there are then we are make use of useMemo
+* When using setState with a mutable object like Object or Array you must clone it else re-render will not happen
